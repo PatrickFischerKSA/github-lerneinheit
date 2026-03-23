@@ -1,4 +1,5 @@
 const STORAGE_KEY = "github-lerneinheit-v3";
+const STORAGE_VERSION = 2;
 const TASK_SELECTOR = "input[data-task]";
 const FIELD_SELECTOR = "[data-field]";
 
@@ -82,19 +83,386 @@ const LEVELS = [
   { number: 5, title: "Guide", minXp: 1450 }
 ];
 
+let currentState = {};
+let storageReady = false;
+let sessionPassword = "";
+let persistQueue = Promise.resolve();
+let securityState = {
+  enabled: false,
+  locked: false
+};
 let toastTimer = null;
 
 function loadState() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-  } catch {
-    return {};
-  }
+  return currentState;
 }
 
 function saveState(state) {
-  state.updatedAt = new Date().toISOString();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  currentState = state;
+  currentState.updatedAt = new Date().toISOString();
+  void queuePersist(cloneState(currentState));
+}
+
+function cloneState(state) {
+  return JSON.parse(JSON.stringify(state || {}));
+}
+
+function readStorageEnvelope() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+
+    if (parsed?.storageVersion === STORAGE_VERSION) {
+      return parsed;
+    }
+
+    return {
+      storageVersion: STORAGE_VERSION,
+      mode: "plain",
+      state: parsed || {}
+    };
+  } catch {
+    return {
+      storageVersion: STORAGE_VERSION,
+      mode: "plain",
+      state: {}
+    };
+  }
+}
+
+function bytesToBase64(bytes) {
+  let binary = "";
+
+  bytes.forEach((value) => {
+    binary += String.fromCharCode(value);
+  });
+
+  return window.btoa(binary);
+}
+
+function base64ToBytes(value) {
+  const binary = window.atob(value);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+
+  return bytes;
+}
+
+async function deriveKey(password, salt) {
+  const keyMaterial = await window.crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(password),
+    "PBKDF2",
+    false,
+    ["deriveKey"]
+  );
+
+  return window.crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt,
+      iterations: 120000,
+      hash: "SHA-256"
+    },
+    keyMaterial,
+    {
+      name: "AES-GCM",
+      length: 256
+    },
+    false,
+    ["encrypt", "decrypt"]
+  );
+}
+
+async function encryptStateSnapshot(state, password) {
+  const salt = window.crypto.getRandomValues(new Uint8Array(16));
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(password, salt);
+  const plaintext = new TextEncoder().encode(JSON.stringify(state));
+  const ciphertext = new Uint8Array(
+    await window.crypto.subtle.encrypt(
+      {
+        name: "AES-GCM",
+        iv
+      },
+      key,
+      plaintext
+    )
+  );
+
+  return {
+    salt: bytesToBase64(salt),
+    iv: bytesToBase64(iv),
+    ciphertext: bytesToBase64(ciphertext)
+  };
+}
+
+async function decryptStateSnapshot(payload, password) {
+  try {
+    const key = await deriveKey(password, base64ToBytes(payload.salt));
+    const plaintext = await window.crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: base64ToBytes(payload.iv)
+      },
+      key,
+      base64ToBytes(payload.ciphertext)
+    );
+
+    return JSON.parse(new TextDecoder().decode(plaintext));
+  } catch {
+    return null;
+  }
+}
+
+async function persistSnapshot(snapshot) {
+  if (securityState.enabled) {
+    if (!sessionPassword) {
+      return;
+    }
+
+    const encrypted = await encryptStateSnapshot(snapshot, sessionPassword);
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        storageVersion: STORAGE_VERSION,
+        mode: "encrypted",
+        encrypted
+      })
+    );
+    return;
+  }
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      storageVersion: STORAGE_VERSION,
+      mode: "plain",
+      state: snapshot
+    })
+  );
+}
+
+function queuePersist(snapshot) {
+  if (!storageReady) {
+    return Promise.resolve();
+  }
+
+  persistQueue = persistQueue
+    .then(() => persistSnapshot(snapshot))
+    .catch((error) => {
+      console.error(error);
+      showToast("Speichern fehlgeschlagen.");
+    });
+
+  return persistQueue;
+}
+
+function isStorageLocked() {
+  return securityState.enabled && securityState.locked;
+}
+
+function clearSecurityInput() {
+  const input = document.getElementById("storagePassword");
+
+  if (input) {
+    input.value = "";
+  }
+}
+
+function renderSecurityControls() {
+  const status = document.getElementById("securityStatus");
+  const hint = document.getElementById("securityHint");
+  const input = document.getElementById("storagePassword");
+  const setButton = document.getElementById("setStoragePassword");
+  const unlockButton = document.getElementById("unlockStorage");
+  const lockButton = document.getElementById("lockStorage");
+  const removeButton = document.getElementById("removeStoragePassword");
+  const enabled = securityState.enabled;
+  const locked = isStorageLocked();
+
+  if (!status || !hint || !input) {
+    return;
+  }
+
+  status.className = "status-pill subtle";
+
+  if (!enabled) {
+    status.textContent = "Nicht aktiviert";
+    hint.textContent = "Optional: Schütze alle lokal gespeicherten Einträge mit einem Passwort.";
+    input.placeholder = "Passwort eingeben";
+    setButton.hidden = false;
+    unlockButton.hidden = true;
+    lockButton.hidden = true;
+    removeButton.hidden = true;
+    return;
+  }
+
+  if (locked) {
+    status.classList.add("locked");
+    status.textContent = "Gesperrt";
+    hint.textContent = "Die Einträge sind geschützt. Gib das Passwort ein, um sie wieder anzuzeigen.";
+    input.placeholder = "Passwort zum Entsperren";
+    setButton.hidden = true;
+    unlockButton.hidden = false;
+    lockButton.hidden = true;
+    removeButton.hidden = true;
+    return;
+  }
+
+  status.classList.add("done");
+  status.textContent = "Aktiv";
+  hint.textContent = "Der Passwortschutz ist aktiv. Du kannst die Einträge sperren oder den Schutz wieder entfernen.";
+  input.placeholder = "Optional Passwort erneut eingeben";
+  setButton.hidden = true;
+  unlockButton.hidden = true;
+  lockButton.hidden = false;
+  removeButton.hidden = false;
+}
+
+function applyGlobalLockState() {
+  const locked = isStorageLocked();
+  const protectedButtons = [
+    "saveProfile",
+    "toggleProfileRow",
+    "toggleLabels",
+    "exportSummary",
+    "jumpCurrent",
+    "focusCurrent",
+    "exportCertificate",
+    "printCertificate"
+  ];
+
+  ["studentName", "studentClass", "projectUrl"].forEach((id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.disabled = locked;
+    }
+  });
+
+  document.querySelectorAll("#prompting-unit [data-field]").forEach((element) => {
+    element.disabled = locked;
+  });
+
+  protectedButtons.forEach((id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.disabled = locked;
+    }
+  });
+}
+
+async function initializeStorage() {
+  const envelope = readStorageEnvelope();
+
+  if (!envelope) {
+    currentState = {};
+    securityState = { enabled: false, locked: false };
+    return;
+  }
+
+  if (envelope.mode === "encrypted") {
+    currentState = {};
+    securityState = { enabled: true, locked: true };
+    return;
+  }
+
+  currentState = envelope.state || {};
+  securityState = { enabled: false, locked: false };
+}
+
+async function enablePasswordProtection() {
+  const input = document.getElementById("storagePassword");
+  const password = input?.value || "";
+
+  if (!window.crypto?.subtle) {
+    showToast("Dieser Browser unterstützt den Passwortschutz hier nicht.");
+    return;
+  }
+
+  if (password.trim().length < 4) {
+    showToast("Bitte wähle ein Passwort mit mindestens 4 Zeichen.");
+    return;
+  }
+
+  securityState.enabled = true;
+  securityState.locked = false;
+  sessionPassword = password;
+  currentState.updatedAt = new Date().toISOString();
+  await queuePersist(cloneState(currentState));
+  clearSecurityInput();
+  renderSecurityControls();
+  renderUI();
+  showToast("Passwortschutz aktiviert.");
+}
+
+async function unlockProtectedStorage() {
+  const input = document.getElementById("storagePassword");
+  const password = input?.value || "";
+  const envelope = readStorageEnvelope();
+
+  if (!password) {
+    showToast("Bitte gib das Passwort ein.");
+    return;
+  }
+
+  if (!envelope?.encrypted) {
+    showToast("Kein geschützter Speicher gefunden.");
+    return;
+  }
+
+  const decrypted = await decryptStateSnapshot(envelope.encrypted, password);
+
+  if (!decrypted) {
+    showToast("Das Passwort stimmt nicht.");
+    return;
+  }
+
+  currentState = decrypted;
+  securityState.locked = false;
+  sessionPassword = password;
+  clearSecurityInput();
+  hydrateInputs();
+  renderUI();
+  showToast("Einträge entsperrt.");
+}
+
+function lockProtectedStorage() {
+  securityState.locked = true;
+  sessionPassword = "";
+  currentState = {};
+  clearSecurityInput();
+  hydrateInputs();
+  renderUI();
+  showToast("Einträge gesperrt.");
+}
+
+async function removePasswordProtection() {
+  const confirmed = window.confirm(
+    "Soll der Passwortschutz entfernt und die Einträge wieder normal lokal gespeichert werden?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  securityState.enabled = false;
+  securityState.locked = false;
+  currentState.updatedAt = new Date().toISOString();
+  await queuePersist(cloneState(currentState));
+  sessionPassword = "";
+  clearSecurityInput();
+  renderSecurityControls();
+  renderUI();
+  showToast("Passwortschutz entfernt.");
 }
 
 function escapeHtml(value) {
@@ -224,9 +592,23 @@ function updateLabelButton(hidden) {
   button.textContent = hidden ? "Bildhinweise einblenden" : "Bildhinweise ausblenden";
 }
 
+function updateProfileRowButton(hidden) {
+  const button = document.getElementById("toggleProfileRow");
+  if (!button) {
+    return;
+  }
+
+  button.textContent = hidden ? "Angabenzeile einblenden" : "Angabenzeile ausblenden";
+}
+
 function updateSaveState() {
   const badge = document.getElementById("saveState");
   const state = loadState();
+
+  if (isStorageLocked()) {
+    badge.textContent = "Passwortgeschützt";
+    return;
+  }
 
   if (!state.updatedAt) {
     badge.textContent = "Noch nicht gespeichert";
@@ -238,7 +620,7 @@ function updateSaveState() {
     timeStyle: "short"
   }).format(new Date(state.updatedAt));
 
-  badge.textContent = `Lokal gespeichert: ${formatted}`;
+  badge.textContent = securityState.enabled ? `Geschützt gespeichert: ${formatted}` : `Lokal gespeichert: ${formatted}`;
 }
 
 function hydrateInputs() {
@@ -254,11 +636,21 @@ function hydrateInputs() {
 
   document.body.classList.toggle("labels-hidden", Boolean(state.labelsHidden));
   updateLabelButton(Boolean(state.labelsHidden));
+  document.querySelector(".meta-grid")?.classList.toggle("is-hidden", Boolean(state.profileRowHidden));
+  updateProfileRowButton(Boolean(state.profileRowHidden));
+  renderSecurityControls();
 }
 
 function renderProgress(gameState) {
   const progressText = document.getElementById("progressText");
   const progressFill = document.getElementById("progressFill");
+
+  if (isStorageLocked()) {
+    progressText.textContent = "GitHub-Schritte sind passwortgeschützt";
+    progressFill.style.width = "0%";
+    return;
+  }
+
   const ratio = gameState.total ? (gameState.completed / gameState.total) * 100 : 0;
 
   progressText.textContent = `${gameState.completed} / ${gameState.total} GitHub-Schritte erledigt`;
@@ -267,6 +659,12 @@ function renderProgress(gameState) {
 
 function renderUrlPreview(state) {
   const preview = document.getElementById("urlPreview");
+
+  if (isStorageLocked()) {
+    preview.textContent = "Die gespeicherte URL ist passwortgeschützt.";
+    return;
+  }
+
   const url = state.field_finalUrl || state.projectUrl || "";
 
   if (!url) {
@@ -284,6 +682,17 @@ function renderUrlPreview(state) {
 
 function renderSummary(state, gameState) {
   const summaryBox = document.getElementById("summaryBox");
+
+  if (isStorageLocked()) {
+    summaryBox.innerHTML = `
+      <article class="summary-card">
+        <strong>Passwortschutz aktiv</strong>
+        <p>Entsperre oben im Arbeitsblatt die lokal gespeicherten Einträge, um die Zusammenfassung zu sehen.</p>
+      </article>
+    `;
+    return;
+  }
+
   const entries = [
     ["Name", state.studentName || "Noch nicht eingetragen"],
     ["Klasse", state.studentClass || "Noch nicht eingetragen"],
@@ -348,6 +757,17 @@ function renderJourneyMap(state, gameState) {
 }
 
 function renderMissionCockpit(gameState) {
+  if (isStorageLocked()) {
+    document.getElementById("currentStepLabel").textContent = "Gesperrt";
+    document.getElementById("currentStepTitle").textContent = "Einträge sind passwortgeschützt";
+    document.getElementById("unlockedCount").textContent = "geschützt";
+    document.getElementById("xpLabel").textContent = "geschützt";
+    document.getElementById("levelLabel").textContent = "geschützt";
+    document.getElementById("streakLabel").textContent = "Entsperre oben im Arbeitsblatt";
+    document.getElementById("badgeCount").textContent = "geschützt";
+    return;
+  }
+
   const currentCard = document.getElementById(`step-${gameState.currentStep}`);
   const title = currentCard?.querySelector("h3")?.textContent || "Lernstrecke abgeschlossen";
   const currentLabel = gameState.completed === gameState.total ? "Abschluss" : `Schritt ${gameState.currentStep}`;
@@ -374,6 +794,18 @@ function renderMissionCockpit(gameState) {
 
 function renderBadgeBoard(state) {
   const badgeBoard = document.getElementById("badgeBoard");
+
+  if (isStorageLocked()) {
+    badgeBoard.innerHTML = `
+      <article class="badge-card locked">
+        <div class="badge-medal">?</div>
+        <strong>Passwortschutz aktiv</strong>
+        <p>Entsperre die Einträge, um Badges und Meilensteine zu sehen.</p>
+      </article>
+    `;
+    return;
+  }
+
   const earnedIds = new Set(getEarnedBadges(state).map((badge) => badge.id));
 
   badgeBoard.innerHTML = BADGE_CONFIG
@@ -392,6 +824,18 @@ function renderBadgeBoard(state) {
 }
 
 function renderCertificate(state, gameState) {
+  if (isStorageLocked()) {
+    document.getElementById("certificateName").textContent = "Passwortschutz aktiv";
+    document.getElementById("certificateBody").textContent =
+      "Entsperre die lokal gespeicherten Einträge, um das Zertifikat wieder anzuzeigen.";
+    document.getElementById("certificateLevel").textContent = "geschützt";
+    document.getElementById("certificateXp").textContent = "geschützt";
+    document.getElementById("certificateBadges").textContent = "geschützt";
+    document.getElementById("certificateProject").textContent = "geschützt";
+    document.getElementById("certificateStatus").textContent = "Gesperrt";
+    return;
+  }
+
   const formattedDate = new Intl.DateTimeFormat("de-CH", {
     dateStyle: "long"
   }).format(new Date());
@@ -499,11 +943,14 @@ function renderQuizStates(state) {
 }
 
 function applyStepStates(state, gameState) {
+  const protectedLock = isStorageLocked();
+
   getTaskCards().forEach((card) => {
     const step = getStepNumber(card);
     const isDone = Boolean(state[`task_${step}`]);
     const isCurrent = step === gameState.currentStep && !isDone;
     const isLocked = step > gameState.unlockedThrough && !isDone;
+    const isUnavailable = isLocked || protectedLock;
     const quizRequired = Boolean(QUIZ_CONFIG[step]);
     const quizPassed = Boolean(state[`quiz_${step}_passed`]);
     const canComplete = !quizRequired || quizPassed || isDone;
@@ -514,11 +961,11 @@ function applyStepStates(state, gameState) {
 
     card.classList.toggle("done", isDone);
     card.classList.toggle("current", isCurrent);
-    card.classList.toggle("locked", isLocked);
+    card.classList.toggle("locked", isUnavailable);
 
     if (checkbox) {
       checkbox.checked = isDone;
-      checkbox.disabled = isLocked || !canComplete;
+      checkbox.disabled = isUnavailable || !canComplete;
     }
 
     card.querySelectorAll("input, select, textarea, button").forEach((element) => {
@@ -531,16 +978,16 @@ function applyStepStates(state, gameState) {
       }
 
       if (isJumpButton) {
-        element.disabled = isLocked;
+        element.disabled = isUnavailable;
         return;
       }
 
       if (isQuizButton) {
-        element.disabled = isLocked || quizPassed;
+        element.disabled = isUnavailable || quizPassed;
         return;
       }
 
-      element.disabled = isLocked;
+      element.disabled = isUnavailable;
     });
 
     if (statusChip) {
@@ -549,6 +996,9 @@ function applyStepStates(state, gameState) {
       if (isDone) {
         statusChip.classList.add("done");
         statusChip.textContent = "Geschafft";
+      } else if (protectedLock) {
+        statusChip.classList.add("locked");
+        statusChip.textContent = "Passwortschutz";
       } else if (isLocked) {
         statusChip.classList.add("locked");
         statusChip.textContent = "Gesperrt";
@@ -564,7 +1014,10 @@ function applyStepStates(state, gameState) {
     }
 
     if (lockedNote) {
-      if (isLocked) {
+      if (protectedLock) {
+        lockedNote.hidden = false;
+        lockedNote.textContent = "Diese Einträge sind passwortgeschützt. Entsperre sie oben im Arbeitsblatt.";
+      } else if (isLocked) {
         lockedNote.hidden = false;
         lockedNote.textContent = `Dieser Schritt wird aktiv, sobald du Schritt ${step - 1} abgeschlossen hast.`;
       } else if (quizRequired && !quizPassed && !isDone) {
@@ -590,6 +1043,7 @@ function renderUI() {
   const gameState = computeGameState(state);
 
   updateSaveState();
+  renderSecurityControls();
   renderProgress(gameState);
   renderJourneyMap(state, gameState);
   renderMissionCockpit(gameState);
@@ -599,6 +1053,7 @@ function renderUI() {
   renderCertificate(state, gameState);
   renderQuizStates(state);
   applyStepStates(state, gameState);
+  applyGlobalLockState();
 }
 
 function setStateValue(key, value) {
@@ -716,6 +1171,11 @@ function createCertificateDocument(state, gameState) {
 }
 
 function exportCertificate() {
+  if (isStorageLocked()) {
+    showToast("Entsperre zuerst die Einträge, um das Zertifikat zu exportieren.");
+    return;
+  }
+
   const state = loadState();
   const gameState = computeGameState(state);
   const html = createCertificateDocument(state, gameState);
@@ -733,6 +1193,11 @@ function exportCertificate() {
 }
 
 function exportSummary() {
+  if (isStorageLocked()) {
+    showToast("Entsperre zuerst die Einträge, um den Lernnachweis zu exportieren.");
+    return;
+  }
+
   const state = loadState();
   const gameState = computeGameState(state);
   const lines = [
@@ -827,6 +1292,12 @@ function bindJourneyMap() {
     const step = Number(link.dataset.journeyStep);
     const gameState = computeGameState(loadState());
 
+    if (isStorageLocked()) {
+      event.preventDefault();
+      showToast("Entsperre zuerst die passwortgeschützten Einträge.");
+      return;
+    }
+
     if (step > gameState.unlockedThrough) {
       event.preventDefault();
       showToast("Dieser Schritt ist noch gesperrt.");
@@ -866,12 +1337,51 @@ function bindEvents() {
     showToast("Deine Angaben wurden lokal gespeichert.");
   });
 
+  document.getElementById("setStoragePassword").addEventListener("click", () => {
+    void enablePasswordProtection();
+  });
+
+  document.getElementById("unlockStorage").addEventListener("click", () => {
+    void unlockProtectedStorage();
+  });
+
+  document.getElementById("lockStorage").addEventListener("click", lockProtectedStorage);
+  document.getElementById("removeStoragePassword").addEventListener("click", () => {
+    void removePasswordProtection();
+  });
+
+  document.getElementById("storagePassword").addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (isStorageLocked()) {
+      void unlockProtectedStorage();
+      return;
+    }
+
+    if (!securityState.enabled) {
+      void enablePasswordProtection();
+    }
+  });
+
   document.getElementById("toggleLabels").addEventListener("click", () => {
     const state = loadState();
     state.labelsHidden = !state.labelsHidden;
     saveState(state);
     document.body.classList.toggle("labels-hidden", Boolean(state.labelsHidden));
     updateLabelButton(Boolean(state.labelsHidden));
+    renderUI();
+  });
+
+  document.getElementById("toggleProfileRow").addEventListener("click", () => {
+    const state = loadState();
+    state.profileRowHidden = !state.profileRowHidden;
+    saveState(state);
+    document.querySelector(".meta-grid")?.classList.toggle("is-hidden", Boolean(state.profileRowHidden));
+    updateProfileRowButton(Boolean(state.profileRowHidden));
     renderUI();
   });
 
@@ -950,11 +1460,13 @@ function bindEvents() {
   bindJourneyMap();
 }
 
-function init() {
+async function init() {
+  await initializeStorage();
+  storageReady = true;
   hydrateInputs();
   injectStepEnhancements();
   bindEvents();
   renderUI();
 }
 
-init();
+void init();

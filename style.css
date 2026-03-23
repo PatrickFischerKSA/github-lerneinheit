@@ -187,8 +187,57 @@ h3 {
   gap: 14px;
 }
 
+.meta-grid.is-hidden {
+  display: none;
+}
+
 .double-field {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.security-strip {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(24, 35, 47, 0.08);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.security-copy strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.security-copy p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.security-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.security-controls input {
+  flex: 1 1 240px;
+  min-width: 220px;
+}
+
+.status-pill.subtle {
+  background: rgba(24, 35, 47, 0.06);
+}
+
+.status-pill.subtle.done {
+  background: rgba(46, 139, 87, 0.12);
+  color: var(--green);
+}
+
+.status-pill.subtle.locked {
+  background: rgba(214, 106, 31, 0.14);
+  color: var(--orange);
 }
 
 .field {

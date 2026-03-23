@@ -58,10 +58,33 @@
           </label>
         </div>
 
+        <section class="security-strip">
+          <div class="security-copy">
+            <strong>Passwortschutz für lokale Einträge</strong>
+            <p id="securityHint">
+              Optional: Schütze alle lokal gespeicherten Einträge mit einem Passwort.
+            </p>
+          </div>
+          <div class="security-controls">
+            <input
+              id="storagePassword"
+              type="password"
+              placeholder="Passwort eingeben"
+              autocomplete="current-password"
+            />
+            <button class="btn secondary" id="setStoragePassword">Passwortschutz aktivieren</button>
+            <button class="btn secondary" id="unlockStorage" hidden>Entsperren</button>
+            <button class="btn ghost" id="lockStorage" hidden>Sperren</button>
+            <button class="btn ghost" id="removeStoragePassword" hidden>Passwortschutz entfernen</button>
+            <span id="securityStatus" class="status-pill subtle">Nicht aktiviert</span>
+          </div>
+        </section>
+
         <div class="button-row">
           <a class="btn ghost" href="index.html">Zur Varianten-Übersicht</a>
           <button class="btn primary" id="jumpCurrent">Lernstrecke starten</button>
           <button class="btn primary" id="saveProfile">Angaben sichern</button>
+          <button class="btn ghost" id="toggleProfileRow">Angabenzeile ausblenden</button>
           <button class="btn secondary" id="toggleLabels">Bildhinweise ausblenden</button>
           <button class="btn ghost" id="exportSummary">Zusammenfassung exportieren</button>
           <button class="btn ghost" id="resetAll">Neu starten</button>
