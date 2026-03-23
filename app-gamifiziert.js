@@ -1187,8 +1187,8 @@ function renderCertificate(state, gameState) {
   const projectName = state.field_repoName || "Noch kein Repository eingetragen";
   const personName = state.studentName || "Noch kein Name eingetragen";
   const certificateBody = completed
-    ? `für die erfolgreiche Bearbeitung der Prompting-Einheit sowie aller ${gameState.total} GitHub-Schritte am ${formattedDate}.`
-    : `für den bisherigen Fortschritt in der Prompting- und GitHub-Lernstrecke. Aktuell wurden ${gameState.completed} von ${gameState.total} GitHub-Schritten abgeschlossen.`;
+    ? `für die erfolgreiche Bearbeitung der technischen Grundlagen zu Prompten und GitHub sowie aller ${gameState.total} GitHub-Schritte am ${formattedDate}.`
+    : `für den bisherigen Fortschritt in der Lernstrecke zu Prompten, GitHub und dem Anwendungsbeispiel Bahnwärter Thiel. Aktuell wurden ${gameState.completed} von ${gameState.total} GitHub-Schritten abgeschlossen.`;
 
   document.getElementById("certificateName").textContent = personName;
   document.getElementById("certificateBody").textContent = certificateBody;
@@ -1429,7 +1429,7 @@ function createCertificateDocument(state, gameState) {
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <title>Prompting- und GitHub-Zertifikat</title>
+  <title>Zertifikat zu Prompten und GitHub</title>
   <style>
     body {
       margin: 0;
@@ -1497,11 +1497,11 @@ function createCertificateDocument(state, gameState) {
 </head>
 <body>
   <section class="card">
-    <div class="kicker">Prompting- und GitHub-Lernstrecke</div>
+    <div class="kicker">Prompten, GitHub und Bahnwärter Thiel</div>
     <h1>Zertifikat</h1>
     <p>Dieses Zertifikat wird verliehen an</p>
     <div class="name">${personName}</div>
-    <p>für die Bearbeitung der Prompting-Einheit sowie der interaktiven GitHub-Lernstrecke am ${dateText}.</p>
+    <p>für die Bearbeitung der technischen Grundlagen zu Prompten und GitHub sowie des Anwendungsbeispiels am ${dateText}.</p>
     <div class="meta">
       <div><span class="label">Level</span>${escapeHtml(levelText)}</div>
       <div><span class="label">Punkte</span>${gameState.xp} XP</div>
@@ -1548,7 +1548,7 @@ function exportSummary() {
   const gameState = computeGameState(state);
   const feedbackReport = normalizeFeedbackReport(state.projectFeedbackItems);
   const lines = [
-    "Prompting- und GitHub-Lernstrecke",
+    "Prompten, GitHub und Bahnwärter Thiel",
     "",
     `Name: ${state.studentName || "-"}`,
     `Klasse: ${state.studentClass || "-"}`,

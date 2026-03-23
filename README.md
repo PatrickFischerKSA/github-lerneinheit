@@ -1,8 +1,9 @@
-# Gelingendes Prompten, GitHub-Einführung und Bahnwärter Thiel
+# Prompten, GitHub und Bahnwärter Thiel
 
 Eigenständige interaktive Lernstrecke mit zwei klar getrennten Varianten:
 
-- vorgeschaltete Mini-Einheit zum gelingenden Prompten mit `Bahnwärter Thiel`
+- technischer Auftakt zu Prompten und GitHub
+- `Bahnwärter Thiel` als literarisches Anwendungsbeispiel
 - GitHub-Einführung mit 12 geführten Schritten
 - offener Projektteil für eigene Unterrichtskonzepte und Umsetzungen
 - diskreter Leitfaden zur Projektentwicklung, der sich ausblenden lässt

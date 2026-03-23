@@ -1127,7 +1127,7 @@ function exportSummary() {
   const progress = getProgressInfo(state);
   const feedbackReport = normalizeFeedbackReport(state.projectFeedbackItems);
   const lines = [
-    "Prompting- und GitHub-Lernstrecke - Einfache Version",
+    "Prompten, GitHub und Bahnwärter Thiel - Einfache Version",
     "",
     `Name: ${state.studentName || "-"}`,
     `Klasse: ${state.studentClass || "-"}`,
