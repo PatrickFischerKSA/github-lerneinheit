@@ -1,4 +1,4 @@
-# Gelingendes Prompten, Github-Einführung und Bahnwärter Thiel
+# Gelingendes Prompten, GitHub-Einführung und Bahnwärter Thiel
 
 Eigenständige interaktive Lernstrecke mit zwei klar getrennten Varianten:
 
