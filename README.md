@@ -7,6 +7,7 @@ Eigenständige interaktive Lernstrecke mit zwei klar getrennten Varianten:
 - offener Projektteil für eigene Unterrichtskonzepte und Umsetzungen
 - diskreter Leitfaden zur Projektentwicklung, der sich ausblenden lässt
 - optionale Abschluss-Checkliste und kritisches Feedbacktool für den Projektcheck
+- echter Stand-Export und Wiederimport als JSON, um die Arbeit kontoübergreifend fortzusetzen
 - Einbindung der Materialien aus der PowerPoint und dem geteilten Chatverlauf
 - Einbindung der Materialsammlung aus Craft inklusive Text, Hörbuch und Verfilmung
 - visuelle Schritt-für-Schritt-Hinweise direkt auf Screenshots

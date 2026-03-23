@@ -28,6 +28,59 @@ function cloneState(state) {
   return JSON.parse(JSON.stringify(state || {}));
 }
 
+function wordCount(value) {
+  return String(value || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+}
+
+function getCheckedProjectReviewCount(state) {
+  return ["focus", "materials", "goals", "flow", "product", "support"].filter((key) => state[`review_${key}`]).length;
+}
+
+function createPortableExportPayload() {
+  return {
+    app: "github-lerneinheit",
+    mode: "einfach",
+    exportedAt: new Date().toISOString(),
+    state: cloneState(loadState())
+  };
+}
+
+function exportStateSnapshot() {
+  if (isStorageLocked()) {
+    showToast("Entsperre zuerst die Einträge, um den Stand zu exportieren.");
+    return;
+  }
+
+  const payload = createPortableExportPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const baseName = (loadState().studentName || "projektstand").trim().replace(/\s+/g, "-").toLowerCase();
+
+  link.href = url;
+  link.download = `${baseName || "projektstand"}-lernstand.json`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importStateSnapshot(payload) {
+  const importedState = payload?.state && typeof payload.state === "object" ? payload.state : payload;
+
+  if (!importedState || typeof importedState !== "object" || Array.isArray(importedState)) {
+    throw new Error("invalid payload");
+  }
+
+  currentState = cloneState(importedState);
+  saveState(currentState);
+  hydrateInputs();
+  renderUI();
+}
+
 function readStorageEnvelope() {
   const raw = localStorage.getItem(STORAGE_KEY);
 
@@ -253,6 +306,8 @@ function applyGlobalLockState() {
   const locked = isStorageLocked();
   const protectedButtons = [
     "saveProfile",
+    "exportState",
+    "importState",
     "toggleProfileRow",
     "toggleProjectGuide",
     "toggleProjectChecklist",
@@ -528,41 +583,81 @@ function generateProjectFeedback(state) {
   const flow = (state.field_projectFlow || "").trim();
   const product = (state.field_projectProduct || "").trim();
   const support = (state.field_projectSupport || "").trim();
+  const notes = (state.field_projectNotes || "").trim();
+  const reviewCount = getCheckedProjectReviewCount(state);
+  const questionWords = wordCount(question);
+  const goalsWords = wordCount(goals);
+  const flowWords = wordCount(flow);
+  const productWords = wordCount(product);
 
   if (!title) {
     feedback.push("Gib dem Projekt einen klaren Arbeitstitel, damit die Einheit ein erkennbares Profil bekommt.");
+  } else {
+    feedback.push(`Stark ist bereits der erkennbare Projektrahmen über den Titel „${title}“. Prüfe nun, ob dieser Titel auch in Leitfrage, Materialien und Produkt wirklich wieder auftaucht.`);
   }
 
   if (!audience) {
     feedback.push("Die Zielgruppe oder Klasse fehlt noch. Das erschwert die passende Schwierigkeitsstufe und Materialwahl.");
+  } else {
+    feedback.push(`Die Zielgruppe ist benannt (${audience}). Überarbeite nun bei allen Aufgaben die sprachliche und analytische Tiefe genau für diese Lerngruppe.`);
   }
 
-  if (question.length < 30) {
-    feedback.push("Die Leitfrage wirkt noch zu knapp. Formuliere sie so, dass sie die Deutung oder das Problem wirklich öffnet.");
+  if (questionWords < 8) {
+    feedback.push("Die Leitfrage wirkt noch zu kurz oder zu allgemein. Formuliere sie so, dass ein echtes literarisches oder didaktisches Problem sichtbar wird.");
+  } else if (!/[?]/.test(question)) {
+    feedback.push("Die Leitfrage ist inhaltlich angelegt, aber noch nicht als echte Frage formuliert. Eine präzise Frage schärft Fokus und Aufgabenbau.");
+  } else {
+    feedback.push("Die Leitfrage gibt bereits Richtung. Prüfe als Nächstes, ob jede Phase des Projekts auf diese Frage zurückführt und nicht nur lose dazugehängt wirkt.");
   }
 
   if (!materials) {
     feedback.push("Die Materialbasis ist noch offen. Entscheide bewusst, ob Text, Hörbuch, Film oder eine Kombination zentral ist.");
   } else if (!/text|hörbuch|film|verfilmung/i.test(materials)) {
     feedback.push("Benenne die Materialien konkreter, damit sichtbar wird, worauf sich die Einheit tatsächlich stützt.");
+  } else if (!/vergleich|kombination|kontrast|gegenüber|ergänz/i.test(materials) && /text|hörbuch|film|verfilmung/i.test(materials)) {
+    feedback.push("Die Materialien sind benannt. Noch stärker wird das Projekt, wenn du kurz begründest, warum genau diese Kombination für deine Leitfrage didaktisch sinnvoll ist.");
   }
 
-  if (goals.length < 50) {
+  if (goalsWords < 10) {
     feedback.push("Die Lernziele sollten noch präziser werden: Was sollen Lernende am Ende erkennen, deuten, vergleichen oder gestalten?");
+  } else if (!/analys|deut|vergleich|reflex|gestalt|schreib|argument/i.test(goals)) {
+    feedback.push("Die Lernziele sind schon vorhanden, aber ihre fachliche Operation bleibt noch unscharf. Nutze Tätigkeitswörter wie deuten, analysieren, vergleichen oder gestalten.");
+  } else {
+    feedback.push("Die Lernziele haben Substanz. Prüfe zusätzlich, ob sie beobachtbar sind und sich im geplanten Produkt wirklich zeigen lassen.");
   }
 
-  if (!/einstieg|erarbeitung|sicherung|transfer|vertiefung/i.test(flow)) {
+  if (flowWords < 12) {
+    feedback.push("Der Ablauf ist noch zu knapp. Eine gute Projektentwicklung braucht erkennbare Phasen, damit Zeit, Material und Sozialform realistisch bleiben.");
+  } else if (!/einstieg|erarbeitung|sicherung|transfer|vertiefung/i.test(flow)) {
     feedback.push("Die Ablaufskizze könnte klarer in Phasen gegliedert sein, zum Beispiel Einstieg, Erarbeitung, Sicherung und Transfer.");
+  } else {
+    feedback.push("Die Ablaufskizze ist schon strukturiert. Hinterfrage nun kritisch, ob jede Phase wirklich nötig ist oder ob einzelne Schritte gekürzt und verdichtet werden können.");
   }
 
   if (!product) {
     feedback.push("Das geplante Produkt oder Ergebnis ist noch nicht sichtbar. Formuliere, was am Ende konkret entsteht.");
-  } else if (product.length < 30) {
+  } else if (productWords < 6) {
     feedback.push("Das Produkt ist genannt, aber noch recht knapp. Präzisiere Form, Umfang und Bewertungsperspektive.");
+  } else {
+    feedback.push("Das Endprodukt ist benannt. Prüfe noch, woran Qualität erkennbar wird und welche Kriterien Lernende dafür transparent kennen sollten.");
   }
 
   if (!support) {
     feedback.push("Differenzierung oder Unterstützung fehlen noch. Überlege sprachliche Hilfen, Wahlaufgaben oder gestufte Zugänge.");
+  } else if (!/hilfe|wahl|differenz|stütz|satz|impuls|niveau/i.test(support)) {
+    feedback.push("Unterstützung ist angedeutet, aber noch nicht konkret genug. Benenne klar, welche Hilfen, Wahlpfade oder sprachlichen Stützen du gibst.");
+  } else {
+    feedback.push("Differenzierung ist mitgedacht. Achte darauf, dass Unterstützung nicht nur Zusatzmaterial ist, sondern Lernwege wirklich öffnet.");
+  }
+
+  if (reviewCount < 3) {
+    feedback.push("In der Abschluss-Checkliste sind bisher nur wenige Punkte markiert. Nutze sie, um blinde Flecken vor der Umsetzung sichtbar zu machen.");
+  } else if (reviewCount === 6) {
+    feedback.push("Die Checkliste ist vollständig markiert. Hinterfrage nun besonders die Punkte, die am überzeugendsten wirken, noch einmal gegen Zeitrahmen und Realisierbarkeit.");
+  }
+
+  if (notes && wordCount(notes) > 20) {
+    feedback.push("Deine offenen Notizen zeigen bereits Denkbewegung. Der nächste sinnvolle Schritt wäre, lose Ideen jetzt in verbindliche Entscheidungen zu überführen.");
   }
 
   if (feedback.length === 0) {
@@ -780,6 +875,7 @@ function injectStepEnhancements() {
     statusRow.innerHTML = `
       <span class="status-chip" data-step-status="${step}">Bereit</span>
       <div class="step-controls">
+        <button class="btn ghost small" type="button" data-action="export-state" data-step="${step}">Stand exportieren</button>
         <button class="btn ghost small" type="button" data-action="focus-image" data-step="${step}">Zum Bild</button>
         <button class="btn secondary small" type="button" data-action="jump-next" data-step="${step}">Nächster Schritt</button>
       </div>
@@ -1135,6 +1231,31 @@ function bindEvents() {
   });
 
   document.getElementById("exportSummary").addEventListener("click", exportSummary);
+  document.getElementById("exportState").addEventListener("click", exportStateSnapshot);
+  document.getElementById("importState").addEventListener("click", () => {
+    if (isStorageLocked()) {
+      showToast("Entsperre zuerst die Einträge, bevor du einen Stand importierst.");
+      return;
+    }
+
+    document.getElementById("importStateFile").click();
+  });
+  document.getElementById("importStateFile").addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(await file.text());
+      importStateSnapshot(payload);
+      showToast("Stand importiert.");
+    } catch {
+      showToast("Die Datei konnte nicht importiert werden.");
+    }
+  });
 
   document.getElementById("resetAll").addEventListener("click", () => {
     const confirmed = window.confirm(
@@ -1164,6 +1285,11 @@ function bindEvents() {
     }
 
     const step = Number(actionButton.dataset.step);
+
+    if (actionButton.dataset.action === "export-state") {
+      exportStateSnapshot();
+      return;
+    }
 
     if (actionButton.dataset.action === "focus-image") {
       const state = loadState();
