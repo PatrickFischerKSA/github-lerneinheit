@@ -940,6 +940,7 @@ function applyGlobalLockState() {
     "focusCurrent",
     "prepareTeamsSubmission",
     "printProjectOverview",
+    "exportSubmissionPdf",
     "exportCertificate",
     "printCertificate",
     "runProjectFeedback",
@@ -2397,6 +2398,13 @@ function bindEvents() {
   document.getElementById("printProjectOverview").addEventListener("click", () => {
     document.getElementById("projectOverviewBox")?.scrollIntoView({ behavior: "smooth", block: "start" });
     window.print();
+  });
+  document.getElementById("exportSubmissionPdf").addEventListener("click", () => {
+    document.getElementById("summaryBox")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Im Druckdialog kannst du die Übersicht jetzt als PDF speichern und danach an die Lehrperson senden.");
+    window.setTimeout(() => {
+      window.print();
+    }, 180);
   });
 
   document.getElementById("resetAll").addEventListener("click", () => {
