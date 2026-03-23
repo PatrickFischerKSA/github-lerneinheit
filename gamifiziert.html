@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompting- und GitHub-Lernstrecke - Gamifizierte Version</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Gamifizierte Version</p>
+        <h1>Gelingendes Prompten sowie GitHub-Konto, Repository und GitHub Pages als interaktive Lernstrecke</h1>
+        <p class="lead">
+          Diese Einheit startet mit einer kurzen Prompting-Einheit zu <em>Bahnwärter Thiel</em>
+          und verbindet danach visuelle Klickhilfen mit aktivem Aufgabenmodus. Lernende
+          arbeiten Schritt für Schritt, sammeln Punkte, lösen Mini-Checks und erhalten am
+          Schluss ein Zertifikat.
+        </p>
+        <div class="hero-facts">
+          <div class="fact">
+            <span class="fact-label">Umfang</span>
+            <strong>4 Prompt-Impulse + 12 GitHub-Schritte</strong>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Produkt</span>
+            <strong>Veröffentlichte GitHub-Pages-Seite</strong>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Extras</span>
+            <strong>Tests, Punkte, Badges, Zertifikat</strong>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Speicherung</span>
+            <strong>Lokal im Browser</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-panel panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Arbeitsblatt</p>
+              <h2>Persönliche Angaben</h2>
+            </div>
+          <span id="saveState" class="status-pill">Noch nicht gespeichert</span>
+        </div>
+
+        <div class="meta-grid">
+          <label class="field">
+            <span>Name</span>
+            <input id="studentName" type="text" placeholder="Vorname Nachname" />
+          </label>
+          <label class="field">
+            <span>Klasse</span>
+            <input id="studentClass" type="text" placeholder="z. B. FM1" />
+          </label>
+          <label class="field">
+            <span>Projekt-URL optional</span>
+            <input id="projectUrl" type="url" placeholder="https://username.github.io/repo/" />
+          </label>
+        </div>
+
+        <div class="button-row">
+          <a class="btn ghost" href="index.html">Zur Varianten-Übersicht</a>
+          <button class="btn primary" id="jumpCurrent">Lernstrecke starten</button>
+          <button class="btn primary" id="saveProfile">Angaben sichern</button>
+          <button class="btn secondary" id="toggleLabels">Bildhinweise ausblenden</button>
+          <button class="btn ghost" id="exportSummary">Zusammenfassung exportieren</button>
+          <button class="btn ghost" id="resetAll">Neu starten</button>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span>Bearbeitungsstand</span>
+            <span id="progressText">0 / 12 GitHub-Schritte erledigt</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="panel sticky">
+          <div class="panel-head compact">
+            <div>
+              <p class="panel-kicker">Navigation</p>
+              <h2>Modulaufbau</h2>
+            </div>
+          </div>
+
+          <div class="sidebar-block">
+            <h3>Lernziele</h3>
+            <ul class="plain-list">
+              <li>Prompts gezielt verbessern und präzisieren</li>
+              <li>ein GitHub-Konto sicher anlegen</li>
+              <li>ein neues Repository erstellen</li>
+              <li>Webdateien hochladen und publizieren</li>
+              <li>die GitHub-Pages-URL dokumentieren</li>
+            </ul>
+          </div>
+
+          <div class="sidebar-block">
+            <h3>Phasen</h3>
+            <nav class="toc">
+              <a href="#prompting-unit">Auftakt: Gelingendes Prompten</a>
+              <a href="#phase-1">1. Einstieg</a>
+              <a href="#phase-2">2. Repository bauen</a>
+              <a href="#phase-3">3. Dateien und Pages</a>
+              <a href="#phase-4">4. Abschluss</a>
+            </nav>
+          </div>
+
+          <div class="sidebar-block mission-card">
+            <h3>Mission Cockpit</h3>
+            <div class="mission-stack">
+              <div class="mission-line">
+                <span>Aktiver Schritt</span>
+                <strong id="currentStepLabel">Schritt 1</strong>
+              </div>
+              <p id="currentStepTitle" class="mission-title">GitHub aufrufen und Startpunkt finden</p>
+              <div class="mission-line">
+                <span>Freigeschaltet</span>
+                <strong id="unlockedCount">1 von 12</strong>
+              </div>
+              <div class="mission-line">
+                <span>Punkte</span>
+                <strong id="xpLabel">0 XP</strong>
+              </div>
+              <div class="mission-line">
+                <span>Level</span>
+                <strong id="levelLabel">Level 1</strong>
+              </div>
+              <div class="mission-line">
+                <span>Serie</span>
+                <strong id="streakLabel">1 Schritt bis zum ersten Checkpoint</strong>
+              </div>
+              <div class="mission-line">
+                <span>Badges</span>
+                <strong id="badgeCount">0 von 5</strong>
+              </div>
+            </div>
+            <button class="btn secondary" id="focusCurrent">Zum aktiven Schritt</button>
+          </div>
+
+          <div class="sidebar-block note-card">
+            <strong>Arbeitsweise</strong>
+            <p>
+              Starte mit der kurzen Prompting-Einheit. Die anschliessenden 12 GitHub-Schritte
+              zählen im Fortschritt. Das Häkchen setzt du erst, wenn du den Schritt wirklich
+              ausgeführt hast.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="content">
+        <section class="panel intro-panel">
+          <div class="intro-grid">
+            <div>
+              <p class="panel-kicker">So funktioniert die Einheit</p>
+              <h2>Geführt arbeiten, selbst dokumentieren</h2>
+            </div>
+            <ol class="workflow">
+              <li>Starte mit der kurzen Einheit zum gelingenden Prompten.</li>
+              <li>Arbeite die Schritte der Reihe nach ab.</li>
+              <li>Nutze die Highlights auf den Screenshots bei Bedarf.</li>
+              <li>Trage Beobachtungen und Ergebnisse direkt in die Felder ein.</li>
+              <li>Exportiere zum Schluss die Zusammenfassung als Lernnachweis.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section id="prompting-unit" class="phase prompt-phase">
+          <div class="phase-head">
+            <p class="phase-kicker">Auftakt</p>
+            <h2>Kurze Einheit: Gelingendes Prompten mit <em>Bahnwärter Thiel</em></h2>
+          </div>
+
+          <section class="panel prompt-overview">
+            <div class="prompt-overview-grid">
+              <div>
+                <p class="panel-kicker">Merksatz</p>
+                <h3>Rolle + Aufgabe + Kontext + Format</h3>
+                <p class="lead compact">
+                  Gute Prompts sind konkret. Gute Ergebnisse entstehen durch gezieltes
+                  Nachschärfen. Deshalb arbeiten wir hier mit einem Beispiel aus dem
+                  Deutschunterricht.
+                </p>
+              </div>
+              <div class="formula-card">
+                <p class="formula-label">Prompt-Formel</p>
+                <div class="formula-pills">
+                  <span>Rolle</span>
+                  <span>Aufgabe</span>
+                  <span>Kontext</span>
+                  <span>Format</span>
+                </div>
+                <p class="formula-note">Erst klar fragen – dann gezielt nachschärfen.</p>
+                <label class="field">
+                  <span>Wie merkst du dir die Formel?</span>
+                  <input type="text" data-field="promptFormula" placeholder="z. B. Rolle + Aufgabe + Kontext + Format" />
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <article class="panel step-card prompt-card">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Prompt-Impuls 1</p>
+                <h3>Start: Unspezifischer Prompt</h3>
+              </div>
+              <span class="prompt-chip">Ausgangslage</span>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/prompt_step1_unspezifisch.png" alt="Screenshot zum unspezifischen Prompt" class="screenshot" />
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Ein sehr kurzer Prompt liefert oft nur allgemeine Ergebnisse.</p>
+                <div class="prompt-example">
+                  <strong>Beispiel:</strong>
+                  <p>Erstelle eine Lerneinheit zu <em>Bahnwärter Thiel</em>.</p>
+                </div>
+                <p class="criterion">Leitfrage: Was fehlt, damit die Antwort wirklich zum Unterricht passt?</p>
+                <label class="field">
+                  <span>Was ist an diesem Startprompt noch zu ungenau?</span>
+                  <textarea data-field="promptWeakness" rows="4" placeholder="z. B. Zielgruppe, Umfang, Format oder Schwerpunkt fehlen"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel step-card prompt-card">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Prompt-Impuls 2</p>
+                <h3>Verbesserung: Rolle + Kontext</h3>
+              </div>
+              <span class="prompt-chip">Erste Verbesserung</span>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/prompt_step2_rolle_kontext.png" alt="Screenshot zur Verbesserung mit Rolle und Kontext" class="screenshot" />
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Ein besserer Prompt benennt Rolle, Lernzielgruppe und gewünschte Form.</p>
+                <div class="prompt-example">
+                  <strong>Beispiel:</strong>
+                  <p>Du bist eine Deutschlehrer*in. Erstelle eine interaktive Lerneinheit zu <em>Bahnwärter Thiel</em> für eine 2. Klasse (Sek II).</p>
+                </div>
+                <p class="criterion">Leitfrage: Welche Zusatzinfos machen den Auftrag klarer?</p>
+                <label class="field">
+                  <span>Welche Rolle und welcher Kontext verbessern den Prompt hier?</span>
+                  <textarea data-field="promptRoleContext" rows="4" placeholder="z. B. Deutschlehrer*in, 2. Klasse, interaktive Lerneinheit"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel step-card prompt-card">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Prompt-Impuls 3</p>
+                <h3>Iteration 1: Konkrete Szene</h3>
+              </div>
+              <span class="prompt-chip">Gezielt nachschärfen</span>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/prompt_step3_konkrete_szene.png" alt="Screenshot zur konkreten Szene" class="screenshot" />
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Mit einer konkreten Szene wird die Antwort textnäher und fachlich präziser.</p>
+                <div class="prompt-example">
+                  <strong>Beispiel:</strong>
+                  <p>Beziehe dich konkret auf die Szene mit Tobias’ Tod und formuliere drei textnahe Fragen.</p>
+                </div>
+                <p class="criterion">Leitfrage: Welche Textstelle oder Szene soll bearbeitet werden?</p>
+                <label class="field">
+                  <span>Welche Szene würdest du für eine gute Lernaufgabe auswählen?</span>
+                  <textarea data-field="promptSceneFocus" rows="4" placeholder="z. B. Tobias’ Tod, die Wahrnehmung Thiels, die Konflikte im Alltag"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel step-card prompt-card">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Prompt-Impuls 4</p>
+                <h3>Iteration 2: Fachliche Präzisierung</h3>
+              </div>
+              <span class="prompt-chip">Noch präziser</span>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/prompt_step4_praezisierung.png" alt="Screenshot zur fachlichen Präzisierung" class="screenshot" />
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Die stärksten Ergebnisse entstehen, wenn du das gewünschte Format fachlich genau festlegst.</p>
+                <div class="prompt-example">
+                  <strong>Beispiel:</strong>
+                  <p>Ergänze direkte Zitate mit Seitenangabe und formuliere die Fragen so, dass sie für eine interaktive Lernstrecke geeignet sind.</p>
+                </div>
+                <p class="criterion">Leitfrage: Welche Form, Tiefe oder Quellenangaben brauchst du zusätzlich?</p>
+                <label class="field">
+                  <span>Wie würdest du den Prompt am Ende präzisieren?</span>
+                  <textarea data-field="promptPrecision" rows="5" placeholder="z. B. direkte Zitate mit Seitenangabe, drei textnahe Fragen, klare Arbeitsaufträge"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel journey-panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="panel-kicker">Lernroute</p>
+              <h2>Schritt für Schritt durch die GitHub-Lernstrecke</h2>
+            </div>
+          </div>
+          <div id="journeyMap" class="journey-map"></div>
+        </section>
+
+        <section class="panel badges-panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="panel-kicker">Belohnungen</p>
+              <h2>Badges und Meilensteine</h2>
+            </div>
+          </div>
+          <div id="badgeBoard" class="badge-board"></div>
+        </section>
+
+        <section id="phase-1" class="phase">
+          <div class="phase-head">
+            <p class="phase-kicker">Phase 1</p>
+            <h2>Einstieg und Konto</h2>
+          </div>
+
+          <article id="step-1" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 1</p>
+                <h3>GitHub aufrufen und Startpunkt finden</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="1" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step1_start.jpeg" alt="GitHub Startseite mit Sign-up-Bereich" class="screenshot" />
+                <div class="label-pin red" style="left: 88%; top: 12%;">Sign up</div>
+                <div class="label-pin blue" style="left: 41%; top: 60%;">Einstieg ins Formular</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Öffne GitHub im Browser und finde den Einstieg zur Registrierung.</p>
+                <p class="criterion">Erfolgskriterium: Du siehst, wo du die Kontoerstellung startest.</p>
+                <label class="field">
+                  <span>Was klickst du als Erstes?</span>
+                  <input type="text" data-field="startAction" placeholder="z. B. Sign up" />
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-2" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 2</p>
+                <h3>Konto erstellen und Username festhalten</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="2" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step2_signup.png" alt="GitHub Registrierungsformular" class="screenshot" />
+                <div class="label-pin blue" style="left: 66%; top: 35%;">E-Mail</div>
+                <div class="label-pin blue" style="left: 66%; top: 48%;">Passwort</div>
+                <div class="label-pin blue" style="left: 66%; top: 61%;">Username</div>
+                <div class="label-pin green" style="left: 73%; top: 94%;">Create account</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Fülle die Pflichtfelder aus und schliesse die Registrierung ab.</p>
+                <p class="criterion">Erfolgskriterium: Dein gewählter Username ist notiert und du kannst dich anmelden.</p>
+                <label class="field">
+                  <span>Welchen GitHub-Username hast du gewählt?</span>
+                  <input type="text" data-field="username" placeholder="dein Username" />
+                </label>
+                <label class="field">
+                  <span>Was solltest du beim Passwort beachten?</span>
+                  <input type="text" data-field="passwordRule" placeholder="kurze Merkhilfe" />
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-3" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 3</p>
+                <h3>Im Dashboard orientieren</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="3" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step3_dashboard.png" alt="GitHub Dashboard mit Plus-Menü" class="screenshot" />
+                <div class="label-pin red" style="left: 84%; top: 8%;">Plus-Menü</div>
+                <div class="label-pin green" style="left: 17%; top: 15%;">New</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Suche nach dem Login das Menü, mit dem du neue Inhalte anlegst.</p>
+                <p class="criterion">Erfolgskriterium: Du weisst, wo das Plus-Menü liegt.</p>
+                <label class="field">
+                  <span>Welche Funktion hat das Plus-Menü?</span>
+                  <textarea data-field="plusMenuPurpose" rows="4" placeholder="kurz erklären"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="phase-2" class="phase">
+          <div class="phase-head">
+            <p class="phase-kicker">Phase 2</p>
+            <h2>Repository aufsetzen</h2>
+          </div>
+
+          <article id="step-4" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 4</p>
+                <h3>New repository auswählen</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="4" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step4_newrepo.png" alt="Menüpunkt New repository" class="screenshot" />
+                <div class="label-pin red" style="left: 89%; top: 18%;">New repository</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Öffne über das Plus-Menü den Weg zur Erstellung eines neuen Repositories.</p>
+                <p class="criterion">Erfolgskriterium: Das Formular für das neue Repository ist geöffnet.</p>
+                <label class="field">
+                  <span>Welchen Menüpunkt wählt man dafür?</span>
+                  <input type="text" data-field="newRepoEntry" placeholder="z. B. New repository" />
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-5" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 5</p>
+                <h3>Repository-Formular verstehen</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="5" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step5_repoform.png" alt="Leeres Repository-Formular" class="screenshot" />
+                <div class="label-pin blue" style="left: 55%; top: 27%;">Repo-Name</div>
+                <div class="label-pin green" style="left: 60%; top: 58%;">Public prüfen</div>
+                <div class="label-pin red" style="left: 68%; top: 84%;">Create repository</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Lies das Formular genau und entscheide, wie dein Repository heissen soll.</p>
+                <p class="criterion">Erfolgskriterium: Name und Sichtbarkeit sind bewusst gewählt.</p>
+                <div class="double-field">
+                  <label class="field">
+                    <span>Name des Repositories</span>
+                    <input type="text" data-field="repoName" placeholder="mein-projekt" />
+                  </label>
+                  <label class="field">
+                    <span>Sichtbarkeit</span>
+                    <select data-field="visibility">
+                      <option value="">bitte wählen</option>
+                      <option value="Public">Public</option>
+                      <option value="Private">Private</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-6" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 6</p>
+                <h3>Formular ausfüllen und Repository erstellen</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="6" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step6_repoform_filled.png" alt="Ausgefülltes Repository-Formular" class="screenshot" />
+                <div class="label-pin blue" style="left: 47%; top: 27%;">eingetragener Name</div>
+                <div class="label-pin red" style="left: 68%; top: 84%;">Create repository</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Trage den Namen ein und erstelle das Repository.</p>
+                <p class="criterion">Erfolgskriterium: Dein Repository existiert und ist geöffnet.</p>
+                <label class="field">
+                  <span>Warum ist ein klarer Repository-Name hilfreich?</span>
+                  <textarea data-field="repoReason" rows="4" placeholder="kurze Begründung"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="phase-3" class="phase">
+          <div class="phase-head">
+            <p class="phase-kicker">Phase 3</p>
+            <h2>Dateien hochladen und veröffentlichen</h2>
+          </div>
+
+          <article id="step-7" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 7</p>
+                <h3>Neues Repository prüfen</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="7" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step7_repo_created.png" alt="Fertig erstelltes Repository" class="screenshot" />
+                <div class="label-pin red" style="left: 27%; top: 56%;">uploading an existing file</div>
+                <div class="label-pin green" style="left: 16%; top: 17%;">Repository ist bereit</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Kontrolliere, ob dein Repository erfolgreich angelegt wurde.</p>
+                <p class="criterion">Erfolgskriterium: Du erkennst den Link zum Hochladen vorhandener Dateien.</p>
+                <label class="field">
+                  <span>Woran siehst du, dass das Repository erstellt wurde?</span>
+                  <textarea data-field="repoCreatedHint" rows="4" placeholder="Beobachtung notieren"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-8" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 8</p>
+                <h3>Dateien hochladen vorbereiten</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="8" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step8_upload_page.png" alt="GitHub Upload-Seite" class="screenshot" />
+                <div class="label-pin red" style="left: 51%; top: 39%;">Dateien hier hineinziehen</div>
+                <div class="label-pin blue" style="left: 50%; top: 73%;">Commit changes</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Lade die Webdateien hoch oder wähle sie über den Upload-Dialog aus.</p>
+                <p class="criterion">Erfolgskriterium: Die Dateien sind bereit für den Commit.</p>
+                <label class="field">
+                  <span>Welche Dateien müssen für eine einfache Website mindestens vorhanden sein?</span>
+                  <textarea data-field="requiredFiles" rows="4" placeholder="z. B. index.html, style.css, Bilder"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-9" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 9</p>
+                <h3>Dateien vom Computer auswählen</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="9" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step9_file_dialog.png" alt="Dateidialog für den Upload" class="screenshot" />
+                <div class="label-pin blue" style="left: 49%; top: 52%;">Projektdateien wählen</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Wähle die richtigen Dateien aus deinem Projektordner aus.</p>
+                <p class="criterion">Erfolgskriterium: Du lädst nur die benötigten Dateien hoch.</p>
+                <label class="field">
+                  <span>Wie heisst die wichtigste Startdatei deiner Website?</span>
+                  <input type="text" data-field="entryFile" placeholder="z. B. index.html" />
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-10" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 10</p>
+                <h3>Repository-Settings öffnen</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="10" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step10_settings.png" alt="Repository mit Settings-Reiter" class="screenshot" />
+                <div class="label-pin red" style="left: 57%; top: 12%;">Settings</div>
+                <div class="label-pin blue" style="left: 14%; top: 61%;">Pages in der Seitenleiste</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Gehe in die Einstellungen deines Repositories.</p>
+                <p class="criterion">Erfolgskriterium: Der Bereich für GitHub Pages ist erreichbar.</p>
+                <label class="field">
+                  <span>Wo findest du GitHub Pages?</span>
+                  <input type="text" data-field="pagesLocation" placeholder="z. B. links in den Settings" />
+                </label>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="phase-4" class="phase">
+          <div class="phase-head">
+            <p class="phase-kicker">Phase 4</p>
+            <h2>Pages aktivieren und Ergebnis sichern</h2>
+          </div>
+
+          <article id="step-11" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 11</p>
+                <h3>GitHub Pages konfigurieren</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="11" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step11_pages.png" alt="GitHub Pages Einstellungen" class="screenshot" />
+                <div class="label-pin red" style="left: 11%; top: 77%;">Pages</div>
+                <div class="label-pin green" style="left: 42%; top: 40%;">Deploy from a branch</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Wähle in den Einstellungen den Bereich für GitHub Pages aus.</p>
+                <p class="criterion">Erfolgskriterium: Die Publikationsart ist auf einen Branch eingestellt.</p>
+                <div class="double-field">
+                  <label class="field">
+                    <span>Welcher Branch wird verwendet?</span>
+                    <input type="text" data-field="branch" placeholder="z. B. main" />
+                  </label>
+                  <label class="field">
+                    <span>Welcher Ordner wird veröffentlicht?</span>
+                    <input type="text" data-field="rootFolder" placeholder="z. B. / (root)" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-12" class="panel step-card task final-task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 12</p>
+                <h3>Seite aufrufen, URL eintragen und reflektieren</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="12" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step12_pages_branch.png" alt="Branch und Root für GitHub Pages" class="screenshot" />
+                <div class="label-pin blue" style="left: 36%; top: 40%;">main</div>
+                <div class="label-pin blue" style="left: 43%; top: 40%;">/ (root)</div>
+                <div class="label-pin red" style="left: 49%; top: 41%;">Save</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Speichere die Pages-Einstellungen, warte auf die Bereitstellung und prüfe die fertige Seite.</p>
+                <p class="criterion">Erfolgskriterium: Die Website ist über eine URL erreichbar.</p>
+                <label class="field">
+                  <span>GitHub-Pages-URL</span>
+                  <input type="url" data-field="finalUrl" placeholder="https://username.github.io/repo/" />
+                </label>
+                <label class="field">
+                  <span>Was war heute am schwierigsten?</span>
+                  <textarea data-field="reflectionChallenge" rows="3" placeholder="kurze Reflexion"></textarea>
+                </label>
+                <label class="field">
+                  <span>Was kannst du jetzt selbstständig?</span>
+                  <textarea data-field="reflectionSkill" rows="3" placeholder="kurze Reflexion"></textarea>
+                </label>
+                <div id="urlPreview" class="preview-box">Noch keine URL gespeichert.</div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel summary-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Abschluss</p>
+              <h2>Zusammenfassung und Lernnachweis</h2>
+            </div>
+          </div>
+          <div id="summaryBox" class="summary-grid"></div>
+        </section>
+
+        <section class="panel certificate-panel" id="certificateSection">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Zertifikat</p>
+              <h2>Abschlussurkunde für die Lernstrecke</h2>
+            </div>
+            <div class="step-controls">
+              <button class="btn secondary" id="exportCertificate">Zertifikat exportieren</button>
+              <button class="btn ghost" id="printCertificate">Zertifikat drucken</button>
+            </div>
+          </div>
+          <div id="certificateCard" class="certificate-card">
+            <div class="certificate-border">
+              <p class="certificate-kicker">Prompting- und GitHub-Lernstrecke</p>
+              <h3>Zertifikat</h3>
+              <p class="certificate-text">
+                Dieses Zertifikat wird verliehen an
+              </p>
+              <p id="certificateName" class="certificate-name">Noch kein Name eingetragen</p>
+              <p id="certificateBody" class="certificate-text">
+                für die erfolgreiche Bearbeitung der Prompting-Einheit sowie der interaktiven GitHub-Lernstrecke.
+              </p>
+              <div class="certificate-meta">
+                <div>
+                  <span>Level</span>
+                  <strong id="certificateLevel">Level 1</strong>
+                </div>
+                <div>
+                  <span>Punkte</span>
+                  <strong id="certificateXp">0 XP</strong>
+                </div>
+                <div>
+                  <span>Badges</span>
+                  <strong id="certificateBadges">0</strong>
+                </div>
+              </div>
+              <div class="certificate-footer">
+                <div>
+                  <span>Projekt</span>
+                  <strong id="certificateProject">Noch kein Repository eingetragen</strong>
+                </div>
+                <div>
+                  <span>Status</span>
+                  <strong id="certificateStatus">Lernstrecke läuft</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+
+  <script src="app-gamifiziert.js"></script>
+</body>
+</html>
