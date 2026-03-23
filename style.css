@@ -1118,6 +1118,27 @@ textarea {
   color: var(--muted);
 }
 
+.feedback-summary {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.feedback-section + .feedback-section {
+  margin-top: 14px;
+}
+
+.feedback-section h4 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.feedback-section p {
+  margin: 0;
+}
+
 .feedback-list {
   margin: 0;
   padding-left: 20px;

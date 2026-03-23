@@ -3,6 +3,8 @@ const STORAGE_VERSION = 2;
 const TASK_SELECTOR = "input[data-task]";
 const FIELD_SELECTOR = "[data-field]";
 const PROJECT_CHECK_SELECTOR = "input[data-project-check]";
+const APP_ID = "github-lerneinheit";
+const CURRENT_MODE = "gamifiziert";
 
 const QUIZ_CONFIG = {
   2: {
@@ -119,10 +121,32 @@ function getCheckedProjectReviewCount(state) {
   return ["focus", "materials", "goals", "flow", "product", "support"].filter((key) => state[`review_${key}`]).length;
 }
 
+function hasMeaningfulState(state = {}) {
+  return Object.entries(state || {}).some(([key, value]) => {
+    if (key === "updatedAt") {
+      return false;
+    }
+
+    if (value === null || value === undefined || value === false || value === "") {
+      return false;
+    }
+
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+
+    if (typeof value === "object") {
+      return Object.keys(value).length > 0;
+    }
+
+    return true;
+  });
+}
+
 function createPortableExportPayload() {
   return {
-    app: "github-lerneinheit",
-    mode: "gamifiziert",
+    app: APP_ID,
+    mode: CURRENT_MODE,
     exportedAt: new Date().toISOString(),
     state: cloneState(loadState())
   };
@@ -149,16 +173,32 @@ function exportStateSnapshot() {
 }
 
 function importStateSnapshot(payload) {
+  if (payload?.app && payload.app !== APP_ID) {
+    throw new Error("foreign app");
+  }
+
+  if (payload?.storageVersion && /^(plain|encrypted)$/i.test(String(payload.mode || ""))) {
+    throw new Error("storage envelope");
+  }
+
   const importedState = payload?.state && typeof payload.state === "object" ? payload.state : payload;
 
   if (!importedState || typeof importedState !== "object" || Array.isArray(importedState)) {
     throw new Error("invalid payload");
   }
 
+  if (importedState?.encrypted && /^(plain|encrypted)$/i.test(String(importedState.mode || ""))) {
+    throw new Error("encrypted payload");
+  }
+
   currentState = cloneState(importedState);
   saveState(currentState);
   hydrateInputs();
   renderUI();
+
+  return {
+    importedMode: typeof payload?.mode === "string" ? payload.mode : null
+  };
 }
 
 function readStorageEnvelope() {
@@ -704,22 +744,86 @@ function renderProjectFeedbackOutput(state) {
     return;
   }
 
-  const feedback = Array.isArray(state.projectFeedbackItems) ? state.projectFeedbackItems : [];
+  const feedbackReport = normalizeFeedbackReport(state.projectFeedbackItems);
 
-  if (feedback.length === 0) {
+  if (!feedbackReport) {
     output.innerHTML = "<p>Noch kein Feedback erzeugt.</p>";
     return;
   }
 
   output.innerHTML = `
-    <ol class="feedback-list">
-      ${feedback.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
-    </ol>
+    <p class="feedback-summary">${escapeHtml(feedbackReport.summary)}</p>
+    ${
+      feedbackReport.strengths.length
+        ? `
+          <section class="feedback-section">
+            <h4>Schon tragfähig</h4>
+            <ul class="feedback-list">
+              ${feedbackReport.strengths.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+            </ul>
+          </section>
+        `
+        : ""
+    }
+    ${
+      feedbackReport.priorities.length
+        ? `
+          <section class="feedback-section">
+            <h4>Nächste Schärfungen</h4>
+            <ol class="feedback-list">
+              ${feedbackReport.priorities.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+            </ol>
+          </section>
+        `
+        : ""
+    }
+    ${
+      feedbackReport.nextStep
+        ? `
+          <section class="feedback-section">
+            <h4>Sinnvoller nächster Schritt</h4>
+            <p>${escapeHtml(feedbackReport.nextStep)}</p>
+          </section>
+        `
+        : ""
+    }
   `;
 }
 
+function normalizeFeedbackReport(value) {
+  if (Array.isArray(value)) {
+    return value.length
+      ? {
+          summary: "Der Projektcheck hat offene Punkte sichtbar gemacht.",
+          strengths: [],
+          priorities: value,
+          nextStep: "Überarbeite zuerst die Punkte, die Leitfrage, Ablauf und Produkt am stärksten schärfen."
+        }
+      : null;
+  }
+
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+
+  const strengths = Array.isArray(value.strengths) ? value.strengths : [];
+  const priorities = Array.isArray(value.priorities) ? value.priorities : [];
+
+  if (!value.summary && strengths.length === 0 && priorities.length === 0 && !value.nextStep) {
+    return null;
+  }
+
+  return {
+    summary: value.summary || "Der Projektcheck wurde aktualisiert.",
+    strengths,
+    priorities,
+    nextStep: value.nextStep || ""
+  };
+}
+
 function generateProjectFeedback(state) {
-  const feedback = [];
+  const strengths = [];
+  const priorities = [];
   const title = (state.field_projectTitle || "").trim();
   const audience = (state.field_projectAudience || "").trim();
   const question = (state.field_projectQuestion || "").trim();
@@ -736,80 +840,94 @@ function generateProjectFeedback(state) {
   const productWords = wordCount(product);
 
   if (!title) {
-    feedback.push("Gib dem Projekt einen klaren Arbeitstitel, damit die Einheit ein erkennbares Profil bekommt.");
+    priorities.push("Gib dem Projekt einen klaren Arbeitstitel, damit die Einheit ein erkennbares Profil bekommt.");
   } else {
-    feedback.push(`Stark ist bereits der erkennbare Projektrahmen über den Titel „${title}“. Prüfe nun, ob dieser Titel auch in Leitfrage, Materialien und Produkt wirklich wieder auftaucht.`);
+    strengths.push(`Der Titel „${title}“ gibt dem Projekt bereits einen erkennbaren Rahmen.`);
   }
 
   if (!audience) {
-    feedback.push("Die Zielgruppe oder Klasse fehlt noch. Das erschwert die passende Schwierigkeitsstufe und Materialwahl.");
+    priorities.push("Die Zielgruppe oder Klasse fehlt noch. Das erschwert die passende Schwierigkeitsstufe und Materialwahl.");
   } else {
-    feedback.push(`Die Zielgruppe ist benannt (${audience}). Überarbeite nun bei allen Aufgaben die sprachliche und analytische Tiefe genau für diese Lerngruppe.`);
+    strengths.push(`Die Zielgruppe ist benannt (${audience}), dadurch lässt sich die Einheit gezielter zuschneiden.`);
   }
 
   if (questionWords < 8) {
-    feedback.push("Die Leitfrage wirkt noch zu kurz oder zu allgemein. Formuliere sie so, dass ein echtes literarisches oder didaktisches Problem sichtbar wird.");
+    priorities.push("Die Leitfrage wirkt noch zu kurz oder zu allgemein. Formuliere sie so, dass ein echtes literarisches oder didaktisches Problem sichtbar wird.");
   } else if (!/[?]/.test(question)) {
-    feedback.push("Die Leitfrage ist inhaltlich angelegt, aber noch nicht als echte Frage formuliert. Eine präzise Frage schärft Fokus und Aufgabenbau.");
+    priorities.push("Die Leitfrage ist inhaltlich angelegt, aber noch nicht als echte Frage formuliert. Eine präzise Frage schärft Fokus und Aufgabenbau.");
   } else {
-    feedback.push("Die Leitfrage gibt bereits Richtung. Prüfe als Nächstes, ob jede Phase des Projekts auf diese Frage zurückführt und nicht nur lose dazugehängt wirkt.");
+    strengths.push("Die Leitfrage gibt bereits eine erkennbare Richtung für die Projektentwicklung vor.");
   }
 
   if (!materials) {
-    feedback.push("Die Materialbasis ist noch offen. Entscheide bewusst, ob Text, Hörbuch, Film oder eine Kombination zentral ist.");
+    priorities.push("Die Materialbasis ist noch offen. Entscheide bewusst, ob Text, Hörbuch, Film oder eine Kombination zentral ist.");
   } else if (!/text|hörbuch|film|verfilmung/i.test(materials)) {
-    feedback.push("Benenne die Materialien konkreter, damit sichtbar wird, worauf sich die Einheit tatsächlich stützt.");
+    priorities.push("Benenne die Materialien konkreter, damit sichtbar wird, worauf sich die Einheit tatsächlich stützt.");
   } else if (!/vergleich|kombination|kontrast|gegenüber|ergänz/i.test(materials) && /text|hörbuch|film|verfilmung/i.test(materials)) {
-    feedback.push("Die Materialien sind benannt. Noch stärker wird das Projekt, wenn du kurz begründest, warum genau diese Kombination für deine Leitfrage didaktisch sinnvoll ist.");
+    priorities.push("Die Materialien sind benannt. Begründe noch genauer, warum genau diese Auswahl für deine Leitfrage didaktisch sinnvoll ist.");
+  } else {
+    strengths.push("Die Materialwahl ist konkret genug, um daraus tragfähige Arbeitsaufträge zu entwickeln.");
   }
 
   if (goalsWords < 10) {
-    feedback.push("Die Lernziele sollten noch präziser werden: Was sollen Lernende am Ende erkennen, deuten, vergleichen oder gestalten?");
+    priorities.push("Die Lernziele sollten noch präziser werden: Was sollen Lernende am Ende erkennen, deuten, vergleichen oder gestalten?");
   } else if (!/analys|deut|vergleich|reflex|gestalt|schreib|argument/i.test(goals)) {
-    feedback.push("Die Lernziele sind schon vorhanden, aber ihre fachliche Operation bleibt noch unscharf. Nutze Tätigkeitswörter wie deuten, analysieren, vergleichen oder gestalten.");
+    priorities.push("Die Lernziele sind schon vorhanden, aber ihre fachliche Operation bleibt noch unscharf. Nutze Tätigkeitswörter wie deuten, analysieren, vergleichen oder gestalten.");
   } else {
-    feedback.push("Die Lernziele haben Substanz. Prüfe zusätzlich, ob sie beobachtbar sind und sich im geplanten Produkt wirklich zeigen lassen.");
+    strengths.push("Die Lernziele haben bereits Substanz und zeigen fachliche Arbeitsschritte.");
   }
 
   if (flowWords < 12) {
-    feedback.push("Der Ablauf ist noch zu knapp. Eine gute Projektentwicklung braucht erkennbare Phasen, damit Zeit, Material und Sozialform realistisch bleiben.");
+    priorities.push("Der Ablauf ist noch zu knapp. Eine gute Projektentwicklung braucht erkennbare Phasen, damit Zeit, Material und Sozialform realistisch bleiben.");
   } else if (!/einstieg|erarbeitung|sicherung|transfer|vertiefung/i.test(flow)) {
-    feedback.push("Die Ablaufskizze könnte klarer in Phasen gegliedert sein, zum Beispiel Einstieg, Erarbeitung, Sicherung und Transfer.");
+    priorities.push("Die Ablaufskizze könnte klarer in Phasen gegliedert sein, zum Beispiel Einstieg, Erarbeitung, Sicherung und Transfer.");
   } else {
-    feedback.push("Die Ablaufskizze ist schon strukturiert. Hinterfrage nun kritisch, ob jede Phase wirklich nötig ist oder ob einzelne Schritte gekürzt und verdichtet werden können.");
+    strengths.push("Der Ablauf ist bereits in erkennbaren Phasen angelegt.");
   }
 
   if (!product) {
-    feedback.push("Das geplante Produkt oder Ergebnis ist noch nicht sichtbar. Formuliere, was am Ende konkret entsteht.");
+    priorities.push("Das geplante Produkt oder Ergebnis ist noch nicht sichtbar. Formuliere, was am Ende konkret entsteht.");
   } else if (productWords < 6) {
-    feedback.push("Das Produkt ist genannt, aber noch recht knapp. Präzisiere Form, Umfang und Bewertungsperspektive.");
+    priorities.push("Das Produkt ist genannt, aber noch recht knapp. Präzisiere Form, Umfang und Bewertungsperspektive.");
   } else {
-    feedback.push("Das Endprodukt ist benannt. Prüfe noch, woran Qualität erkennbar wird und welche Kriterien Lernende dafür transparent kennen sollten.");
+    strengths.push("Das Endprodukt ist sichtbar und gibt der Einheit ein klares Ziel.");
   }
 
   if (!support) {
-    feedback.push("Differenzierung oder Unterstützung fehlen noch. Überlege sprachliche Hilfen, Wahlaufgaben oder gestufte Zugänge.");
+    priorities.push("Differenzierung oder Unterstützung fehlen noch. Überlege sprachliche Hilfen, Wahlaufgaben oder gestufte Zugänge.");
   } else if (!/hilfe|wahl|differenz|stütz|satz|impuls|niveau/i.test(support)) {
-    feedback.push("Unterstützung ist angedeutet, aber noch nicht konkret genug. Benenne klar, welche Hilfen, Wahlpfade oder sprachlichen Stützen du gibst.");
+    priorities.push("Unterstützung ist angedeutet, aber noch nicht konkret genug. Benenne klar, welche Hilfen, Wahlpfade oder sprachlichen Stützen du gibst.");
   } else {
-    feedback.push("Differenzierung ist mitgedacht. Achte darauf, dass Unterstützung nicht nur Zusatzmaterial ist, sondern Lernwege wirklich öffnet.");
+    strengths.push("Unterstützung und Differenzierung sind bereits mitgedacht.");
   }
 
   if (reviewCount < 3) {
-    feedback.push("In der Abschluss-Checkliste sind bisher nur wenige Punkte markiert. Nutze sie, um blinde Flecken vor der Umsetzung sichtbar zu machen.");
+    priorities.push("In der Abschluss-Checkliste sind bisher nur wenige Punkte markiert. Nutze sie, um blinde Flecken vor der Umsetzung sichtbar zu machen.");
   } else if (reviewCount === 6) {
-    feedback.push("Die Checkliste ist vollständig markiert. Hinterfrage nun besonders die Punkte, die am überzeugendsten wirken, noch einmal gegen Zeitrahmen und Realisierbarkeit.");
+    strengths.push("Die Abschluss-Checkliste ist vollständig bearbeitet und zeigt bereits Reflexionstiefe.");
   }
 
   if (notes && wordCount(notes) > 20) {
-    feedback.push("Deine offenen Notizen zeigen bereits Denkbewegung. Der nächste sinnvolle Schritt wäre, lose Ideen jetzt in verbindliche Entscheidungen zu überführen.");
+    strengths.push("Die offenen Notizen zeigen, dass bereits aktiv an Varianten und Entscheidungen gearbeitet wurde.");
   }
 
-  if (feedback.length === 0) {
-    feedback.push("Die Projektidee ist bereits schlüssig angelegt. Prüfe als nächsten Schritt noch Zeitrahmen, Materialmenge und Leistungsnachweis.");
-  }
+  const summary =
+    priorities.length === 0
+      ? "Die Projektidee ist bereits schlüssig und umsetzungsnah angelegt."
+      : priorities.length <= 3
+        ? "Die Projektidee ist gut erkennbar, braucht aber noch einige gezielte Schärfungen."
+        : "Die Projektidee hat Potenzial, sollte aber vor der Umsetzung noch deutlich präzisiert werden.";
 
-  return feedback;
+  const nextStep =
+    priorities[0] ||
+    "Prüfe als Nächstes noch einmal Zeitrahmen, Materialmenge und Leistungsnachweis im Zusammenspiel.";
+
+  return {
+    summary,
+    strengths,
+    priorities,
+    nextStep
+  };
 }
 
 function updateSaveState() {
@@ -1428,6 +1546,7 @@ function exportSummary() {
 
   const state = loadState();
   const gameState = computeGameState(state);
+  const feedbackReport = normalizeFeedbackReport(state.projectFeedbackItems);
   const lines = [
     "Prompting- und GitHub-Lernstrecke",
     "",
@@ -1457,7 +1576,10 @@ function exportSummary() {
     `Projektcheck Ablauf: ${state.review_flow ? "ja" : "nein"}`,
     `Projektcheck Produkt: ${state.review_product ? "ja" : "nein"}`,
     `Projektcheck Unterstützung: ${state.review_support ? "ja" : "nein"}`,
-    `Projektfeedback: ${(state.projectFeedbackItems || []).join(" | ") || "-"}`,
+    `Projektfeedback Zusammenfassung: ${feedbackReport?.summary || "-"}`,
+    `Projektfeedback Stärken: ${feedbackReport?.strengths?.join(" | ") || "-"}`,
+    `Projektfeedback Schärfungen: ${feedbackReport?.priorities?.join(" | ") || "-"}`,
+    `Projektfeedback Nächster Schritt: ${feedbackReport?.nextStep || "-"}`,
     `Punkte: ${gameState.xp} XP`,
     `Level: ${gameState.level.number} ${gameState.level.title}`,
     `Badges: ${gameState.badges.length}/${BADGE_CONFIG.length}`,
@@ -1698,8 +1820,25 @@ function bindEvents() {
 
     try {
       const payload = JSON.parse(await file.text());
-      importStateSnapshot(payload);
-      showToast("Stand importiert.");
+      if (hasMeaningfulState(loadState())) {
+        const confirmed = window.confirm(
+          "Es gibt bereits einen Lernstand in dieser Version. Soll er durch den importierten Stand ersetzt werden?"
+        );
+
+        if (!confirmed) {
+          return;
+        }
+      }
+
+      const result = importStateSnapshot(payload);
+      const modeLabel =
+        result.importedMode === "gamifiziert"
+          ? "gamifizierten"
+          : result.importedMode === "einfach"
+            ? "einfachen"
+            : null;
+
+      showToast(modeLabel ? `Stand aus der ${modeLabel} Version importiert.` : "Stand importiert.");
     } catch {
       showToast("Die Datei konnte nicht importiert werden.");
     }
