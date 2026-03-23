@@ -565,6 +565,10 @@ textarea {
   object-position: right center;
 }
 
+.thumbnail-card img.focus-top {
+  object-position: center top;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
