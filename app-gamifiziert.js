@@ -5,6 +5,17 @@ const FIELD_SELECTOR = "[data-field]";
 const PROJECT_CHECK_SELECTOR = "input[data-project-check]";
 const APP_ID = "github-lerneinheit";
 const CURRENT_MODE = "gamifiziert";
+const PROJECT_FIELD_KEYS = [
+  "projectTitle",
+  "projectAudience",
+  "projectQuestion",
+  "projectMaterials",
+  "projectGoals",
+  "projectFlow",
+  "projectProduct",
+  "projectSupport",
+  "projectNotes"
+];
 
 const QUIZ_CONFIG = {
   2: {
@@ -119,6 +130,497 @@ function wordCount(value) {
 
 function getCheckedProjectReviewCount(state) {
   return ["focus", "materials", "goals", "flow", "product", "support"].filter((key) => state[`review_${key}`]).length;
+}
+
+function getProjectFieldValue(state, fieldKey) {
+  return String(state[`field_${fieldKey}`] || "").trim();
+}
+
+function getProjectFieldStatus(state, fieldKey) {
+  const value = getProjectFieldValue(state, fieldKey);
+  const words = wordCount(value);
+
+  switch (fieldKey) {
+    case "projectTitle":
+      if (!value) {
+        return {
+          status: "missing",
+          done: false,
+          label: "Titel fehlt",
+          message: "Ein klarer Arbeitstitel hilft, das Projekt als Einheit erkennbar zu machen."
+        };
+      }
+      if (words < 3) {
+        return {
+          status: "weak",
+          done: false,
+          label: "Titel noch knapp",
+          message: "Schärfe den Titel noch etwas, damit Thema und Fokus deutlicher werden."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Titel trägt",
+        message: "Der Arbeitstitel gibt deinem Projekt bereits ein klares Profil."
+      };
+    case "projectAudience":
+      if (!value) {
+        return {
+          status: "missing",
+          done: false,
+          label: "Zielgruppe offen",
+          message: "Lege fest, für welche Klasse oder Stufe die Einheit gedacht ist."
+        };
+      }
+      if (!/klasse|sek|stufe|fm|niveau|lernend/i.test(value)) {
+        return {
+          status: "weak",
+          done: false,
+          label: "Zielgruppe präzisieren",
+          message: "Ergänze Stufe, Klasse oder Lernniveau, damit die Aufgaben passgenau werden."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Zielgruppe klar",
+        message: "Die Lerngruppe ist konkret genug benannt."
+      };
+    case "projectQuestion":
+      if (!value) {
+        return {
+          status: "missing",
+          done: false,
+          label: "Leitfrage fehlt",
+          message: "Ohne Leitfrage bleibt der Projektfokus noch zu offen."
+        };
+      }
+      if (words < 8 || !/[?]/.test(value)) {
+        return {
+          status: "weak",
+          done: false,
+          label: "Leitfrage schärfen",
+          message: "Formuliere eine echte Frage, die ein literarisches oder didaktisches Problem sichtbar macht."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Leitfrage trägt",
+        message: "Die Leitfrage setzt bereits eine klare Richtung für die Einheit."
+      };
+    case "projectMaterials":
+      if (!value) {
+        return {
+          status: "missing",
+          done: false,
+          label: "Materialien fehlen",
+          message: "Entscheide, ob du mit Text, Hörbuch, Film oder einer Kombination arbeitest."
+        };
+      }
+      if (!/text|hörbuch|film|verfilmung/i.test(value)) {
+        return {
+          status: "weak",
+          done: false,
+          label: "Materialwahl konkretisieren",
+          message: "Benenne die Materialien so, dass die Grundlage der Einheit sichtbar wird."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Materialbasis klar",
+        message: "Die Materialwahl ist als Arbeitsgrundlage bereits gut erkennbar."
+      };
+    case "projectGoals":
+      if (!value) {
+        return {
+          status: "missing",
+          done: false,
+          label: "Lernziele fehlen",
+          message: "Formuliere, was Lernende am Ende erkennen, deuten oder gestalten sollen."
+        };
+      }
+      if (words < 10 || !/analys|deut|vergleich|reflex|gestalt|schreib|argument/i.test(value)) {
+        return {
+          status: "weak",
+          done: false,
+          label: "Lernziele schärfen",
+          message: "Nutze beobachtbare Tätigkeitswörter wie deuten, analysieren oder vergleichen."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Lernziele tragfähig",
+        message: "Die Lernziele sind fachlich und operativ schon gut angelegt."
+      };
+    case "projectFlow":
+      if (!value) {
+        return {
+          status: "missing",
+          done: false,
+          label: "Ablauf fehlt",
+          message: "Skizziere wenigstens die wichtigsten Phasen deiner Einheit."
+        };
+      }
+      if (words < 12 || !/einstieg|erarbeitung|sicherung|transfer|vertiefung/i.test(value)) {
+        return {
+          status: "weak",
+          done: false,
+          label: "Ablauf strukturieren",
+          message: "Gliedere die Einheit in erkennbare Phasen wie Einstieg, Erarbeitung und Sicherung."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Ablauf stimmig",
+        message: "Die Phasenstruktur ist nachvollziehbar geplant."
+      };
+    case "projectProduct":
+      if (!value) {
+        return {
+          status: "missing",
+          done: false,
+          label: "Produkt fehlt",
+          message: "Benutze ein klares Endprodukt oder eine sichtbare Ergebnisform."
+        };
+      }
+      if (words < 6) {
+        return {
+          status: "weak",
+          done: false,
+          label: "Produkt präzisieren",
+          message: "Form, Umfang und Bewertungsperspektive des Produkts sind noch zu knapp."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Produkt sichtbar",
+        message: "Das Endprodukt gibt der Einheit bereits ein klares Ziel."
+      };
+    case "projectSupport":
+      if (!value) {
+        return {
+          status: "missing",
+          done: false,
+          label: "Unterstützung fehlt",
+          message: "Überlege Hilfen, Wahlwege oder sprachliche Stützen für unterschiedliche Lernniveaus."
+        };
+      }
+      if (!/hilfe|wahl|differenz|stütz|satz|impuls|niveau/i.test(value)) {
+        return {
+          status: "weak",
+          done: false,
+          label: "Differenzierung konkretisieren",
+          message: "Benenne sichtbar, welche Hilfen oder Wahlpfade du für Lernende anbietest."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Unterstützung mitgedacht",
+        message: "Hilfen und Differenzierung sind als Teil der Einheit erkennbar."
+      };
+    case "projectNotes":
+      if (!value) {
+        return {
+          status: "optional",
+          done: true,
+          label: "Notizen optional",
+          message: "Hier kannst du lose Ideen, Alternativen oder offene Fragen sammeln."
+        };
+      }
+      if (words < 10) {
+        return {
+          status: "weak",
+          done: true,
+          label: "Notizen ausbaufähig",
+          message: "Halte hier ruhig auch Varianten, Risiken oder nächste Schritte fest."
+        };
+      }
+      return {
+        status: "strong",
+        done: true,
+        label: "Notizen hilfreich",
+        message: "Die Notizen zeigen bereits Denkwege und Entscheidungen im Prozess."
+      };
+    default:
+      return {
+        status: "optional",
+        done: true,
+        label: "",
+        message: ""
+      };
+  }
+}
+
+function getProjectCompletionState(state, gameState = computeGameState(state)) {
+  const fieldStatuses = PROJECT_FIELD_KEYS.map((fieldKey) => ({
+    key: fieldKey,
+    ...getProjectFieldStatus(state, fieldKey)
+  }));
+  const incompleteFields = fieldStatuses.filter((field) => !field.done);
+  const checkedReviewCount = getCheckedProjectReviewCount(state);
+  const uncheckedChecks = ["focus", "materials", "goals", "flow", "product", "support"].filter(
+    (key) => !state[`review_${key}`]
+  );
+  const feedbackReady = Boolean(normalizeFeedbackReport(state.projectFeedbackItems));
+  const allGitHubTasksDone = gameState.completed === gameState.total;
+  const everythingDone = allGitHubTasksDone && incompleteFields.length === 0 && uncheckedChecks.length === 0 && feedbackReady;
+  const openItems = [];
+
+  if (!allGitHubTasksDone) {
+    openItems.push(`GitHub-Lernstrecke abschliessen (${gameState.completed} von ${gameState.total} Schritten erledigt).`);
+  }
+
+  incompleteFields.forEach((field) => {
+    openItems.push(field.message);
+  });
+
+  uncheckedChecks.forEach((key) => {
+    const labels = {
+      focus: "Prüfe, ob der Fokus der Einheit klar erkennbar ist.",
+      materials: "Prüfe, ob die Materialwahl zur Leitfrage passt.",
+      goals: "Prüfe, ob die Lernziele konkret genug formuliert sind.",
+      flow: "Prüfe, ob der Ablauf realistisch und nachvollziehbar geplant ist.",
+      product: "Prüfe, ob Produkt und Ergebnis sichtbar sind.",
+      support: "Prüfe, ob Unterstützung und Differenzierung mitgedacht sind."
+    };
+    openItems.push(labels[key]);
+  });
+
+  if (!feedbackReady) {
+    openItems.push("Starte das Feedbacktool mindestens einmal, damit der Projektcheck dokumentiert ist.");
+  }
+
+  return {
+    fieldStatuses,
+    incompleteFields,
+    checkedReviewCount,
+    uncheckedChecks,
+    feedbackReady,
+    allGitHubTasksDone,
+    everythingDone,
+    openItems
+  };
+}
+
+function sanitizeFilePart(value, fallback) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]+/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || fallback;
+}
+
+function downloadTextFile(filename, content) {
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function createTeamsSubmissionText(state, gameState, projectState) {
+  const feedbackReport = normalizeFeedbackReport(state.projectFeedbackItems);
+
+  return [
+    "Teams-Abgabe: Prompten, GitHub und Bahnwärter Thiel",
+    "",
+    `Name: ${state.studentName || "-"}`,
+    `Klasse: ${state.studentClass || "-"}`,
+    `Abgabe vorbereitet am: ${new Intl.DateTimeFormat("de-CH", {
+      dateStyle: "short",
+      timeStyle: "short"
+    }).format(new Date())}`,
+    "",
+    "Abschlussstatus",
+    `GitHub-Schritte: ${gameState.completed}/${gameState.total}`,
+    `Projektcheck: ${projectState.checkedReviewCount}/6`,
+    `Feedbacktool: ${projectState.feedbackReady ? "durchgeführt" : "nicht durchgeführt"}`,
+    `XP / Level: ${gameState.xp} XP / Level ${gameState.level.number} ${gameState.level.title}`,
+    `Badges: ${gameState.badges.length}/${BADGE_CONFIG.length}`,
+    "",
+    "Projektstudio",
+    `Titel: ${state.field_projectTitle || "-"}`,
+    `Zielgruppe: ${state.field_projectAudience || "-"}`,
+    `Leitfrage: ${state.field_projectQuestion || "-"}`,
+    `Materialien: ${state.field_projectMaterials || "-"}`,
+    `Lernziele: ${state.field_projectGoals || "-"}`,
+    `Ablauf: ${state.field_projectFlow || "-"}`,
+    `Produkt / Umsetzung: ${state.field_projectProduct || "-"}`,
+    `Differenzierung / Unterstützung: ${state.field_projectSupport || "-"}`,
+    `Offene Notizen: ${state.field_projectNotes || "-"}`,
+    "",
+    "Digitale Umsetzung",
+    `Projekt-URL: ${state.field_finalUrl || state.projectUrl || "-"}`,
+    `Repository: ${state.field_repoName || "-"}`,
+    `GitHub-Username: ${state.field_username || "-"}`,
+    "",
+    "Projektfeedback",
+    `Kurzfazit: ${feedbackReport?.summary || "-"}`,
+    `Stärken: ${feedbackReport?.strengths?.join(" | ") || "-"}`,
+    `Schärfungen: ${feedbackReport?.priorities?.join(" | ") || "-"}`,
+    `Nächster Schritt: ${feedbackReport?.nextStep || "-"}`,
+    "",
+    "Hinweis",
+    "Diese Datei kann als Begleitdokument in der Teams-Hausaufgabe hochgeladen werden."
+  ].join("\n");
+}
+
+function injectProjectFieldFeedbackSlots() {
+  PROJECT_FIELD_KEYS.forEach((fieldKey) => {
+    const input = document.querySelector(`[data-field="${fieldKey}"]`);
+    const field = input?.closest(".field");
+
+    if (!field || field.querySelector(`[data-field-feedback="${fieldKey}"]`)) {
+      return;
+    }
+
+    const feedback = document.createElement("p");
+    feedback.className = "field-feedback";
+    feedback.dataset.fieldFeedback = fieldKey;
+    field.append(feedback);
+  });
+}
+
+function renderProjectFieldFeedback(state) {
+  PROJECT_FIELD_KEYS.forEach((fieldKey) => {
+    const feedback = document.querySelector(`[data-field-feedback="${fieldKey}"]`);
+    const field = document.querySelector(`[data-field="${fieldKey}"]`)?.closest(".field");
+
+    if (!feedback || !field) {
+      return;
+    }
+
+    const result = getProjectFieldStatus(state, fieldKey);
+    field.classList.remove("field-missing", "field-weak", "field-strong", "field-optional");
+    field.classList.add(`field-${result.status}`);
+    feedback.className = `field-feedback is-${result.status}`;
+    feedback.innerHTML = `
+      <strong>${escapeHtml(result.label)}</strong>
+      <span>${escapeHtml(result.message)}</span>
+    `;
+  });
+}
+
+function renderProjectAlert(state, gameState) {
+  const alertBox = document.getElementById("projectAlertBox");
+
+  if (!alertBox) {
+    return;
+  }
+
+  if (isStorageLocked()) {
+    alertBox.className = "project-alert is-locked";
+    alertBox.innerHTML = "<strong>Passwortschutz aktiv.</strong><p>Entsperre zuerst die Einträge, um den Projektcheck zu sehen.</p>";
+    return;
+  }
+
+  const projectState = getProjectCompletionState(state, gameState);
+
+  if (projectState.everythingDone) {
+    alertBox.className = "project-alert is-success";
+    alertBox.innerHTML = `
+      <strong>Projektcheck vollständig.</strong>
+      <p>Alle Aufträge sind erledigt. Die Übersicht ist bereit und die Teams-Abgabe kann jetzt exportiert werden.</p>
+    `;
+    return;
+  }
+
+  const openItems = projectState.openItems.slice(0, 5);
+  alertBox.className = "project-alert is-warning";
+  alertBox.innerHTML = `
+    <strong>Projektcheck noch nicht vollständig.</strong>
+    <p>Es fehlen noch ${projectState.openItems.length} Punkte, bevor das Projekt als abgeschlossen gilt.</p>
+    <ul class="alert-list">
+      ${openItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function renderProjectOverview(state, gameState) {
+  const box = document.getElementById("projectOverviewBox");
+  const teamsButton = document.getElementById("prepareTeamsSubmission");
+
+  if (!box || !teamsButton) {
+    return;
+  }
+
+  if (isStorageLocked()) {
+    box.innerHTML = `
+      <article class="project-overview-card">
+        <strong>Passwortschutz aktiv</strong>
+        <p>Entsperre zuerst die Einträge, um die Abschlussübersicht zu sehen.</p>
+      </article>
+    `;
+    teamsButton.disabled = true;
+    return;
+  }
+
+  const projectState = getProjectCompletionState(state, gameState);
+  teamsButton.disabled = !projectState.everythingDone;
+
+  box.innerHTML = `
+    <article class="project-overview-card ${projectState.everythingDone ? "is-complete" : ""}">
+      <strong>Gesamtstatus</strong>
+      <p>${projectState.everythingDone ? "Alle Aufträge erledigt" : "Noch nicht vollständig"}</p>
+    </article>
+    <article class="project-overview-card">
+      <strong>GitHub-Aufträge</strong>
+      <p>${gameState.completed} von ${gameState.total} Schritten abgeschlossen</p>
+    </article>
+    <article class="project-overview-card">
+      <strong>Projektstudio</strong>
+      <p>${projectState.fieldStatuses.filter((item) => item.done).length} von ${projectState.fieldStatuses.length} Feldern tragfähig oder optional</p>
+    </article>
+    <article class="project-overview-card">
+      <strong>Projektcheck</strong>
+      <p>${projectState.checkedReviewCount} von 6 Checklistenpunkten markiert</p>
+    </article>
+    <article class="project-overview-card">
+      <strong>Feedbacktool</strong>
+      <p>${projectState.feedbackReady ? "bereits ausgeführt" : "noch nicht gestartet"}</p>
+    </article>
+    <article class="project-overview-card">
+      <strong>Teams-Abgabe</strong>
+      <p>${state.teamsSubmissionPreparedAt ? `exportiert am ${new Intl.DateTimeFormat("de-CH", {
+        dateStyle: "short",
+        timeStyle: "short"
+      }).format(new Date(state.teamsSubmissionPreparedAt))}` : "noch nicht exportiert"}</p>
+    </article>
+  `;
+}
+
+function maybeUpdateTeamsSubmissionState(previousState, nextState) {
+  const previousStatus = getProjectCompletionState(previousState, computeGameState(previousState));
+  const nextGameState = computeGameState(nextState);
+  const nextStatus = getProjectCompletionState(nextState, nextGameState);
+
+  if (previousStatus.everythingDone && !nextStatus.everythingDone && nextState.teamsSubmissionPreparedAt) {
+    delete nextState.teamsSubmissionPreparedAt;
+    saveState(nextState);
+    renderUI();
+    return;
+  }
+
+  if (!previousStatus.everythingDone && nextStatus.everythingDone && !nextState.teamsSubmissionPreparedAt) {
+    nextState.teamsSubmissionPreparedAt = new Date().toISOString();
+    saveState(nextState);
+    renderUI();
+    showToast("Alle Aufträge erledigt. Die Teams-Abgabe ist jetzt bereit.");
+  }
 }
 
 function hasMeaningfulState(state = {}) {
@@ -436,6 +938,8 @@ function applyGlobalLockState() {
     "exportSummary",
     "jumpCurrent",
     "focusCurrent",
+    "prepareTeamsSubmission",
+    "printProjectOverview",
     "exportCertificate",
     "printCertificate",
     "runProjectFeedback",
@@ -1396,6 +1900,9 @@ function renderUI() {
   renderUrlPreview(state);
   renderSummary(state, gameState);
   renderCertificate(state, gameState);
+  renderProjectFieldFeedback(state);
+  renderProjectAlert(state, gameState);
+  renderProjectOverview(state, gameState);
   renderProjectFeedbackOutput(state);
   renderQuizStates(state);
   applyStepStates(state, gameState);
@@ -1403,19 +1910,23 @@ function renderUI() {
 }
 
 function setStateValue(key, value) {
+  const previousState = cloneState(loadState());
   const state = loadState();
   state[key] = value;
   saveState(state);
   renderUI();
+  maybeUpdateTeamsSubmissionState(previousState, state);
 }
 
 function persistProfile() {
+  const previousState = cloneState(loadState());
   const state = loadState();
   state.studentName = document.getElementById("studentName").value;
   state.studentClass = document.getElementById("studentClass").value;
   state.projectUrl = document.getElementById("projectUrl").value;
   saveState(state);
   renderUI();
+  maybeUpdateTeamsSubmissionState(previousState, state);
 }
 
 function createCertificateDocument(state, gameState) {
@@ -1685,6 +2196,7 @@ function bindEvents() {
       saveState(nextState);
       renderUI();
       notifyProgression(previousState, nextState, { type: "task", step });
+      maybeUpdateTeamsSubmissionState(previousState, nextState);
     });
   });
 
@@ -1785,19 +2297,32 @@ function bindEvents() {
   });
 
   document.getElementById("runProjectFeedback").addEventListener("click", () => {
+    const previousState = cloneState(loadState());
     const state = loadState();
+    const projectState = getProjectCompletionState(state);
     state.projectFeedbackItems = generateProjectFeedback(state);
     saveState(state);
     renderUI();
-    showToast("Projektfeedback aktualisiert.");
+
+    if (projectState.openItems.length > 0) {
+      showToast("Projektfeedback aktualisiert. Im Projektcheck sind noch offene Punkte markiert.");
+      document.getElementById("projectAlertBox")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      showToast("Projektfeedback aktualisiert.");
+    }
+
+    maybeUpdateTeamsSubmissionState(previousState, state);
   });
 
   document.getElementById("clearProjectFeedback").addEventListener("click", () => {
+    const previousState = cloneState(loadState());
     const state = loadState();
     state.projectFeedbackItems = [];
+    delete state.teamsSubmissionPreparedAt;
     saveState(state);
     renderUI();
     showToast("Projektfeedback geleert.");
+    maybeUpdateTeamsSubmissionState(previousState, state);
   });
 
   document.getElementById("exportSummary").addEventListener("click", exportSummary);
@@ -1848,6 +2373,31 @@ function bindEvents() {
     document.getElementById("certificateSection").scrollIntoView({ behavior: "smooth", block: "start" });
     window.print();
   });
+  document.getElementById("prepareTeamsSubmission").addEventListener("click", () => {
+    const state = loadState();
+    const gameState = computeGameState(state);
+    const projectState = getProjectCompletionState(state, gameState);
+
+    if (!projectState.everythingDone) {
+      showToast("Die Teams-Abgabe wird erst exportiert, wenn alle Aufträge vollständig erledigt sind.");
+      document.getElementById("projectAlertBox")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    if (!state.teamsSubmissionPreparedAt) {
+      state.teamsSubmissionPreparedAt = new Date().toISOString();
+      saveState(state);
+      renderUI();
+    }
+
+    const baseName = sanitizeFilePart(state.studentName || state.field_projectTitle || "teams-abgabe", "teams-abgabe");
+    downloadTextFile(`${baseName}-teams-abgabe.txt`, createTeamsSubmissionText(state, gameState, projectState));
+    showToast("Teams-Abgabe exportiert. Lade die Datei jetzt in der Teams-Hausaufgabe hoch.");
+  });
+  document.getElementById("printProjectOverview").addEventListener("click", () => {
+    document.getElementById("projectOverviewBox")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.print();
+  });
 
   document.getElementById("resetAll").addEventListener("click", () => {
     const confirmed = window.confirm(
@@ -1888,6 +2438,7 @@ function bindEvents() {
       saveState(nextState);
       renderUI();
       notifyProgression(previousState, nextState, { type: "quiz", step });
+      maybeUpdateTeamsSubmissionState(previousState, nextState);
       return;
     }
 
@@ -1927,6 +2478,7 @@ async function init() {
   storageReady = true;
   hydrateInputs();
   injectStepEnhancements();
+  injectProjectFieldFeedbackSlots();
   bindEvents();
   renderUI();
 }

@@ -1315,6 +1315,48 @@ textarea {
   margin-top: 22px;
 }
 
+.project-alert {
+  margin: 0 0 16px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(24, 35, 47, 0.08);
+  background: rgba(255, 250, 243, 0.82);
+}
+
+.project-alert strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.project-alert p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.project-alert.is-warning {
+  border-color: rgba(190, 97, 48, 0.2);
+  background: rgba(255, 246, 236, 0.9);
+}
+
+.project-alert.is-success {
+  border-color: rgba(45, 125, 89, 0.2);
+  background: rgba(242, 251, 246, 0.94);
+}
+
+.project-alert.is-locked {
+  background: rgba(24, 35, 47, 0.05);
+}
+
+.alert-list {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.alert-list li + li {
+  margin-top: 6px;
+}
+
 .resource-type {
   margin: 0 0 8px;
   text-transform: uppercase;
@@ -1410,6 +1452,125 @@ textarea {
 
 .feedback-list li + li {
   margin-top: 8px;
+}
+
+.field-feedback {
+  margin: 10px 0 0;
+  padding: 11px 12px;
+  border-radius: 14px;
+  font-size: 0.92rem;
+  background: rgba(24, 35, 47, 0.04);
+  border: 1px solid rgba(24, 35, 47, 0.07);
+}
+
+.field-feedback strong,
+.field-feedback span {
+  display: block;
+}
+
+.field-feedback strong {
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.field-feedback span {
+  color: var(--muted);
+}
+
+.field-missing input,
+.field-missing textarea {
+  border-color: rgba(191, 79, 61, 0.34);
+  background: rgba(255, 246, 244, 0.9);
+}
+
+.field-weak input,
+.field-weak textarea {
+  border-color: rgba(190, 97, 48, 0.26);
+  background: rgba(255, 249, 241, 0.92);
+}
+
+.field-strong input,
+.field-strong textarea,
+.field-optional input,
+.field-optional textarea {
+  border-color: rgba(45, 125, 89, 0.2);
+}
+
+.field-feedback.is-missing {
+  background: rgba(255, 244, 241, 0.92);
+  border-color: rgba(191, 79, 61, 0.16);
+}
+
+.field-feedback.is-missing strong {
+  color: var(--red);
+}
+
+.field-feedback.is-weak {
+  background: rgba(255, 248, 240, 0.94);
+  border-color: rgba(190, 97, 48, 0.16);
+}
+
+.field-feedback.is-weak strong {
+  color: var(--orange);
+}
+
+.field-feedback.is-strong,
+.field-feedback.is-optional {
+  background: rgba(243, 251, 246, 0.94);
+  border-color: rgba(45, 125, 89, 0.14);
+}
+
+.field-feedback.is-strong strong,
+.field-feedback.is-optional strong {
+  color: var(--green);
+}
+
+.project-overview-panel {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(24, 35, 47, 0.08);
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.project-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.project-overview-card {
+  min-height: 100px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(24, 35, 47, 0.08);
+  background: rgba(255, 253, 248, 0.94);
+}
+
+.project-overview-card.is-complete {
+  background: rgba(243, 251, 246, 0.96);
+  border-color: rgba(45, 125, 89, 0.18);
+}
+
+.project-overview-card strong {
+  display: block;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  color: var(--orange);
+}
+
+.project-overview-card p {
+  margin: 0;
+}
+
+.project-overview-note {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
 }
 
 .studio-grid .field:first-child,
@@ -1661,6 +1822,7 @@ textarea {
   .review-grid,
   .studio-grid,
   .summary-grid,
+  .project-overview-grid,
   .thumbnail-gallery,
   .journey-map,
   .badge-board,
