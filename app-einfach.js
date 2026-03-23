@@ -2,6 +2,7 @@ const STORAGE_KEY = "github-lerneinheit-einfach-v1";
 const STORAGE_VERSION = 2;
 const TASK_SELECTOR = "input[data-task]";
 const FIELD_SELECTOR = "[data-field]";
+const PROJECT_CHECK_SELECTOR = "input[data-project-check]";
 
 let currentState = {};
 let storageReady = false;
@@ -253,10 +254,15 @@ function applyGlobalLockState() {
   const protectedButtons = [
     "saveProfile",
     "toggleProfileRow",
+    "toggleProjectGuide",
+    "toggleProjectChecklist",
+    "toggleProjectFeedback",
     "toggleLabels",
     "exportSummary",
     "jumpCurrent",
-    "focusCurrent"
+    "focusCurrent",
+    "runProjectFeedback",
+    "clearProjectFeedback"
   ];
 
   ["studentName", "studentClass", "projectUrl"].forEach((id) => {
@@ -266,7 +272,11 @@ function applyGlobalLockState() {
     }
   });
 
-  document.querySelectorAll("#prompting-unit [data-field]").forEach((element) => {
+  document.querySelectorAll("#prompting-unit [data-field], #project-part [data-field]").forEach((element) => {
+    element.disabled = locked;
+  });
+
+  document.querySelectorAll(PROJECT_CHECK_SELECTOR).forEach((element) => {
     element.disabled = locked;
   });
 
@@ -456,6 +466,112 @@ function updateProfileRowButton(hidden) {
   button.textContent = hidden ? "Angabenzeile einblenden" : "Angabenzeile ausblenden";
 }
 
+function updateProjectGuideButton(hidden) {
+  const button = document.getElementById("toggleProjectGuide");
+  if (!button) {
+    return;
+  }
+
+  button.textContent = hidden ? "Leitfaden einblenden" : "Leitfaden ausblenden";
+}
+
+function updateProjectChecklistButton(hidden) {
+  const button = document.getElementById("toggleProjectChecklist");
+  if (!button) {
+    return;
+  }
+
+  button.textContent = hidden ? "Checkliste einblenden" : "Checkliste ausblenden";
+}
+
+function updateProjectFeedbackButton(hidden) {
+  const button = document.getElementById("toggleProjectFeedback");
+  if (!button) {
+    return;
+  }
+
+  button.textContent = hidden ? "Feedbacktool einblenden" : "Feedbacktool ausblenden";
+}
+
+function renderProjectFeedbackOutput(state) {
+  const output = document.getElementById("projectFeedbackOutput");
+  if (!output) {
+    return;
+  }
+
+  if (isStorageLocked()) {
+    output.innerHTML = "<p>Das Feedback ist passwortgeschützt.</p>";
+    return;
+  }
+
+  const feedback = Array.isArray(state.projectFeedbackItems) ? state.projectFeedbackItems : [];
+
+  if (feedback.length === 0) {
+    output.innerHTML = "<p>Noch kein Feedback erzeugt.</p>";
+    return;
+  }
+
+  output.innerHTML = `
+    <ol class="feedback-list">
+      ${feedback.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+    </ol>
+  `;
+}
+
+function generateProjectFeedback(state) {
+  const feedback = [];
+  const title = (state.field_projectTitle || "").trim();
+  const audience = (state.field_projectAudience || "").trim();
+  const question = (state.field_projectQuestion || "").trim();
+  const materials = (state.field_projectMaterials || "").trim();
+  const goals = (state.field_projectGoals || "").trim();
+  const flow = (state.field_projectFlow || "").trim();
+  const product = (state.field_projectProduct || "").trim();
+  const support = (state.field_projectSupport || "").trim();
+
+  if (!title) {
+    feedback.push("Gib dem Projekt einen klaren Arbeitstitel, damit die Einheit ein erkennbares Profil bekommt.");
+  }
+
+  if (!audience) {
+    feedback.push("Die Zielgruppe oder Klasse fehlt noch. Das erschwert die passende Schwierigkeitsstufe und Materialwahl.");
+  }
+
+  if (question.length < 30) {
+    feedback.push("Die Leitfrage wirkt noch zu knapp. Formuliere sie so, dass sie die Deutung oder das Problem wirklich öffnet.");
+  }
+
+  if (!materials) {
+    feedback.push("Die Materialbasis ist noch offen. Entscheide bewusst, ob Text, Hörbuch, Film oder eine Kombination zentral ist.");
+  } else if (!/text|hörbuch|film|verfilmung/i.test(materials)) {
+    feedback.push("Benenne die Materialien konkreter, damit sichtbar wird, worauf sich die Einheit tatsächlich stützt.");
+  }
+
+  if (goals.length < 50) {
+    feedback.push("Die Lernziele sollten noch präziser werden: Was sollen Lernende am Ende erkennen, deuten, vergleichen oder gestalten?");
+  }
+
+  if (!/einstieg|erarbeitung|sicherung|transfer|vertiefung/i.test(flow)) {
+    feedback.push("Die Ablaufskizze könnte klarer in Phasen gegliedert sein, zum Beispiel Einstieg, Erarbeitung, Sicherung und Transfer.");
+  }
+
+  if (!product) {
+    feedback.push("Das geplante Produkt oder Ergebnis ist noch nicht sichtbar. Formuliere, was am Ende konkret entsteht.");
+  } else if (product.length < 30) {
+    feedback.push("Das Produkt ist genannt, aber noch recht knapp. Präzisiere Form, Umfang und Bewertungsperspektive.");
+  }
+
+  if (!support) {
+    feedback.push("Differenzierung oder Unterstützung fehlen noch. Überlege sprachliche Hilfen, Wahlaufgaben oder gestufte Zugänge.");
+  }
+
+  if (feedback.length === 0) {
+    feedback.push("Die Projektidee ist bereits schlüssig angelegt. Prüfe als nächsten Schritt noch Zeitrahmen, Materialmenge und Leistungsnachweis.");
+  }
+
+  return feedback;
+}
+
 function updateSaveState() {
   const badge = document.getElementById("saveState");
   const state = loadState();
@@ -493,6 +609,16 @@ function hydrateInputs() {
   updateLabelButton(Boolean(state.labelsHidden));
   document.querySelector(".meta-grid")?.classList.toggle("is-hidden", Boolean(state.profileRowHidden));
   updateProfileRowButton(Boolean(state.profileRowHidden));
+  document.getElementById("projectGuidePanel")?.classList.toggle("is-hidden", Boolean(state.projectGuideHidden));
+  updateProjectGuideButton(Boolean(state.projectGuideHidden));
+  document.getElementById("projectChecklistPanel")?.classList.toggle("is-hidden", Boolean(state.projectChecklistHidden));
+  updateProjectChecklistButton(Boolean(state.projectChecklistHidden));
+  document.getElementById("projectFeedbackPanel")?.classList.toggle("is-hidden", Boolean(state.projectFeedbackHidden));
+  updateProjectFeedbackButton(Boolean(state.projectFeedbackHidden));
+  document.querySelectorAll(PROJECT_CHECK_SELECTOR).forEach((checkbox) => {
+    checkbox.checked = Boolean(state[`review_${checkbox.dataset.projectCheck}`]);
+  });
+  renderProjectFeedbackOutput(state);
   renderSecurityControls();
 }
 
@@ -613,6 +739,10 @@ function renderSummary(state, progress) {
     ["Repository", state.field_repoName || "Noch nicht eingetragen"],
     ["Sichtbarkeit", state.field_visibility || "Noch nicht gewählt"],
     ["Projekt-URL", state.field_finalUrl || state.projectUrl || "Noch nicht eingetragen"],
+    ["Projektidee", state.field_projectTitle || "Noch kein Projekttitel"],
+    ["Leitfrage", state.field_projectQuestion || "Noch keine Leitfrage"],
+    ["Materialbasis", state.field_projectMaterials || "Noch keine Materialwahl"],
+    ["Produkt / Umsetzung", state.field_projectProduct || "Noch keine Umsetzung notiert"],
     ["Fortschritt", `${progress.completed} von ${progress.total} Schritten erledigt`],
     ["Schwierigster Teil", state.field_reflectionChallenge || "Noch keine Reflexion"],
     ["Das kann ich jetzt", state.field_reflectionSkill || "Noch keine Reflexion"],
@@ -752,6 +882,7 @@ function renderUI() {
   renderMissionCockpit(progress);
   renderUrlPreview(state);
   renderSummary(state, progress);
+  renderProjectFeedbackOutput(state);
   applyStepStates(state, progress);
   applyGlobalLockState();
 }
@@ -794,6 +925,22 @@ function exportSummary() {
     `Repository: ${state.field_repoName || "-"}`,
     `Sichtbarkeit: ${state.field_visibility || "-"}`,
     `Projekt-URL: ${state.field_finalUrl || state.projectUrl || "-"}`,
+    `Projektidee: ${state.field_projectTitle || "-"}`,
+    `Zielgruppe Projekt: ${state.field_projectAudience || "-"}`,
+    `Leitfrage Projekt: ${state.field_projectQuestion || "-"}`,
+    `Materialbasis Projekt: ${state.field_projectMaterials || "-"}`,
+    `Lernziele Projekt: ${state.field_projectGoals || "-"}`,
+    `Ablauf Projekt: ${state.field_projectFlow || "-"}`,
+    `Produkt / Umsetzung: ${state.field_projectProduct || "-"}`,
+    `Differenzierung / Unterstützung: ${state.field_projectSupport || "-"}`,
+    `Projekt-Notizen: ${state.field_projectNotes || "-"}`,
+    `Projektcheck Fokus: ${state.review_focus ? "ja" : "nein"}`,
+    `Projektcheck Materialien: ${state.review_materials ? "ja" : "nein"}`,
+    `Projektcheck Lernziele: ${state.review_goals ? "ja" : "nein"}`,
+    `Projektcheck Ablauf: ${state.review_flow ? "ja" : "nein"}`,
+    `Projektcheck Produkt: ${state.review_product ? "ja" : "nein"}`,
+    `Projektcheck Unterstützung: ${state.review_support ? "ja" : "nein"}`,
+    `Projektfeedback: ${(state.projectFeedbackItems || []).join(" | ") || "-"}`,
     `Fortschritt: ${progress.completed}/${progress.total}`,
     `Wichtige Startdatei: ${state.field_entryFile || "-"}`,
     `Schwierigster Teil: ${state.field_reflectionChallenge || "-"}`,
@@ -936,6 +1083,55 @@ function bindEvents() {
     document.querySelector(".meta-grid")?.classList.toggle("is-hidden", Boolean(state.profileRowHidden));
     updateProfileRowButton(Boolean(state.profileRowHidden));
     renderUI();
+  });
+
+  document.getElementById("toggleProjectGuide").addEventListener("click", () => {
+    const state = loadState();
+    state.projectGuideHidden = !state.projectGuideHidden;
+    saveState(state);
+    document.getElementById("projectGuidePanel")?.classList.toggle("is-hidden", Boolean(state.projectGuideHidden));
+    updateProjectGuideButton(Boolean(state.projectGuideHidden));
+    renderUI();
+  });
+
+  document.getElementById("toggleProjectChecklist").addEventListener("click", () => {
+    const state = loadState();
+    state.projectChecklistHidden = !state.projectChecklistHidden;
+    saveState(state);
+    document.getElementById("projectChecklistPanel")?.classList.toggle("is-hidden", Boolean(state.projectChecklistHidden));
+    updateProjectChecklistButton(Boolean(state.projectChecklistHidden));
+    renderUI();
+  });
+
+  document.getElementById("toggleProjectFeedback").addEventListener("click", () => {
+    const state = loadState();
+    state.projectFeedbackHidden = !state.projectFeedbackHidden;
+    saveState(state);
+    document.getElementById("projectFeedbackPanel")?.classList.toggle("is-hidden", Boolean(state.projectFeedbackHidden));
+    updateProjectFeedbackButton(Boolean(state.projectFeedbackHidden));
+    renderUI();
+  });
+
+  document.querySelectorAll(PROJECT_CHECK_SELECTOR).forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      setStateValue(`review_${checkbox.dataset.projectCheck}`, checkbox.checked);
+    });
+  });
+
+  document.getElementById("runProjectFeedback").addEventListener("click", () => {
+    const state = loadState();
+    state.projectFeedbackItems = generateProjectFeedback(state);
+    saveState(state);
+    renderUI();
+    showToast("Projektfeedback aktualisiert.");
+  });
+
+  document.getElementById("clearProjectFeedback").addEventListener("click", () => {
+    const state = loadState();
+    state.projectFeedbackItems = [];
+    saveState(state);
+    renderUI();
+    showToast("Projektfeedback geleert.");
   });
 
   document.getElementById("exportSummary").addEventListener("click", exportSummary);

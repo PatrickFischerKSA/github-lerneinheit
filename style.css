@@ -982,6 +982,164 @@ textarea {
   padding: 24px;
 }
 
+.project-panel {
+  padding: 24px;
+  background:
+    linear-gradient(135deg, rgba(255, 252, 246, 0.96), rgba(242, 247, 245, 0.92)),
+    radial-gradient(circle at top right, rgba(13, 122, 115, 0.08), transparent 34%);
+}
+
+.project-intro p {
+  margin: 0 0 18px;
+  max-width: 74ch;
+  color: var(--muted);
+}
+
+.project-guide {
+  margin-bottom: 20px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(24, 35, 47, 0.08);
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.project-guide.is-hidden {
+  display: none;
+}
+
+.guide-grid,
+.resource-grid,
+.studio-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.guide-grid,
+.resource-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studio-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.guide-card,
+.resource-card {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(24, 35, 47, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.guide-card strong,
+.resource-card h3 {
+  display: block;
+}
+
+.guide-card p,
+.resource-card p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.project-resources,
+.project-studio {
+  margin-top: 22px;
+}
+
+.project-review {
+  margin-top: 22px;
+}
+
+.resource-type {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.resource-card .btn {
+  margin-top: 16px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.review-card {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(24, 35, 47, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.review-card.is-hidden {
+  display: none;
+}
+
+.review-copy {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+
+.checklist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-check {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  color: var(--text);
+}
+
+.review-check input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+}
+
+.feedback-output {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(22, 50, 79, 0.05);
+  border: 1px solid rgba(24, 35, 47, 0.08);
+}
+
+.feedback-output p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.feedback-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.feedback-list li + li {
+  margin-top: 8px;
+}
+
+.studio-grid .field:first-child,
+.studio-grid .field:nth-child(2) {
+  grid-column: span 1;
+}
+
+.studio-grid .field {
+  grid-column: span 1;
+}
+
+.studio-grid .field textarea {
+  min-height: 140px;
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1211,6 +1369,10 @@ textarea {
   .hero-facts,
   .meta-grid,
   .double-field,
+  .guide-grid,
+  .resource-grid,
+  .review-grid,
+  .studio-grid,
   .summary-grid,
   .journey-map,
   .badge-board,
