@@ -515,15 +515,19 @@
                 <div class="label-pin red" style="left: 74%; top: 18%;">noch keine fertige Website</div>
               </figure>
               <div class="task-box">
-                <p class="instruction">GitHub wird hier nicht nur als Ablage benutzt: Erst durch das Repository werden deine lokalen Webdateien zu einem geordneten Online-Projekt, das später veröffentlicht werden kann.</p>
-                <p class="criterion">Erfolgskriterium: Du kannst erklären, dass ein Repository nicht bloss speichert, sondern Dateien ordnet, zusammenhält und die Veröffentlichung über GitHub Pages vorbereitet.</p>
+                <p class="instruction">GitHub wird hier nicht nur als Ablage benutzt: Erst durch das Repository bleiben nicht nur die Dateien selbst erhalten, sondern auch die genaue Art, wie sie miteinander verbunden sind und zusammen funktionieren.</p>
+                <p class="criterion">Erfolgskriterium: Du kannst erklären, dass ein Repository nicht bloss speichert, sondern auch die Pfade, Verknüpfungen und Abhängigkeiten zwischen den Dateien so ordnet, dass die Website später richtig reagiert.</p>
                 <div class="prompt-example">
                   <strong>Merke:</strong>
-                  <p>Ohne Repository hättest du nur Dateien auf deinem Computer. Mit Repository liegen sie geordnet online und können als Website veröffentlicht werden.</p>
+                  <p>Ohne Repository hättest du nur einzelne Dateien auf deinem Computer. Mit Repository bleiben auch die Beziehungen erhalten: <code>index.html</code> findet <code>style.css</code>, lädt <code>app.js</code> und ruft Bilder aus dem richtigen Ordner auf.</p>
+                </div>
+                <div class="prompt-example">
+                  <strong>Warum das wichtig ist:</strong>
+                  <p>Eine Website funktioniert nur, wenn die Dateien einander an der richtigen Stelle finden. Das Repository bewahrt genau diese Ordnung. Wenn Pfade oder Ordner fehlen, lädt die Seite zwar vielleicht noch, aber Layout, Interaktionen oder Bilder brechen weg.</p>
                 </div>
                 <label class="field">
                   <span>Was leistet ein Repository für dein Webprojekt?</span>
-                  <textarea data-field="repoPurpose" rows="4" placeholder="z. B. Es speichert alle zusammengehörigen Dateien online, hält die Struktur zusammen und macht die Veröffentlichung über GitHub Pages möglich."></textarea>
+                  <textarea data-field="repoPurpose" rows="5" placeholder="z. B. Es speichert nicht nur die Dateien online, sondern auch ihre Ordnung und ihre Verknüpfungen: index.html findet style.css, app.js und die Bilder am richtigen Ort."></textarea>
                 </label>
               </div>
             </div>
