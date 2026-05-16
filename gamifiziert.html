@@ -83,7 +83,7 @@
         <div class="progress-wrap">
           <div class="progress-meta">
             <span>Bearbeitungsstand</span>
-            <span id="progressText">0 / 12 GitHub-Schritte erledigt</span>
+            <span id="progressText">0 / 15 GitHub-Schritte erledigt</span>
           </div>
           <div class="progress-bar">
             <div id="progressFill" class="progress-fill"></div>
@@ -109,7 +109,7 @@
               <a href="#prompting-unit">Auftakt: Technik und Beispiel</a>
               <a href="#phase-1">1. Einstieg</a>
               <a href="#phase-2">2. Repository bauen</a>
-              <a href="#phase-3">3. Dateien und Pages</a>
+              <a href="#phase-3">3. GitHub verstehen und hochladen</a>
               <a href="#phase-4">4. Abschluss</a>
               <a href="#project-part">5. Projektteil</a>
             </nav>
@@ -125,7 +125,7 @@
               <p id="currentStepTitle" class="mission-title">GitHub aufrufen und Startpunkt finden</p>
               <div class="mission-line">
                 <span>Freigeschaltet</span>
-                <strong id="unlockedCount">1 von 12</strong>
+                <strong id="unlockedCount">1 von 15</strong>
               </div>
               <div class="mission-line">
                 <span>Punkte</span>
@@ -496,29 +496,30 @@
         <section id="phase-3" class="phase">
           <div class="phase-head">
             <p class="phase-kicker">Phase 3</p>
-            <h2>Dateien hochladen und veröffentlichen</h2>
+            <h2>GitHub verstehen und Dateien sicher hochladen</h2>
           </div>
 
           <article id="step-7" class="panel step-card task">
             <div class="step-head">
               <div>
                 <p class="step-kicker">Schritt 7</p>
-                <h3>Neues Repository prüfen</h3>
+                <h3>Verstehen, wofür GitHub und das Repository da sind</h3>
               </div>
               <label class="task-check"><input type="checkbox" data-task="7" /> erledigt</label>
             </div>
             <div class="step-grid">
               <figure class="shot">
-                <img src="assets/images/step7_repo_created.png" alt="Fertig erstelltes Repository" class="screenshot" />
-                <div class="label-pin red" style="left: 27%; top: 56%;">uploading an existing file</div>
-                <div class="label-pin green" style="left: 16%; top: 17%;">Repository ist bereit</div>
+                <img src="assets/images/step7_repo_what_is_it.svg" alt="Frisch erstelltes Repository als geordneter Projektort" class="screenshot" />
+                <div class="label-pin green" style="left: 19%; top: 16%;">Repository ist angelegt</div>
+                <div class="label-pin blue" style="left: 41%; top: 53%;">Projektort für Dateien</div>
+                <div class="label-pin red" style="left: 74%; top: 18%;">noch keine fertige Website</div>
               </figure>
               <div class="task-box">
-                <p class="instruction">Kontrolliere, ob dein Repository erfolgreich angelegt wurde.</p>
-                <p class="criterion">Erfolgskriterium: Du erkennst den Link zum Hochladen vorhandener Dateien.</p>
+                <p class="instruction">Bevor du Dateien hochlädst, kläre zuerst, was GitHub und das Repository in diesem Ablauf überhaupt leisten.</p>
+                <p class="criterion">Erfolgskriterium: Du kannst erklären, dass ein Repository der geordnete Online-Ort für alle Dateien deiner Website ist.</p>
                 <label class="field">
-                  <span>Woran siehst du, dass das Repository erstellt wurde?</span>
-                  <textarea data-field="repoCreatedHint" rows="4" placeholder="Beobachtung notieren"></textarea>
+                  <span>Was leistet ein Repository für dein Webprojekt?</span>
+                  <textarea data-field="repoPurpose" rows="4" placeholder="z. B. Es speichert alle zusammengehörigen Dateien online, hält die Struktur zusammen und macht die Veröffentlichung über GitHub Pages möglich."></textarea>
                 </label>
               </div>
             </div>
@@ -528,22 +529,23 @@
             <div class="step-head">
               <div>
                 <p class="step-kicker">Schritt 8</p>
-                <h3>Dateien hochladen vorbereiten</h3>
+                <h3>Einzelne HTML-Datei oder ganze Dateigruppe unterscheiden</h3>
               </div>
               <label class="task-check"><input type="checkbox" data-task="8" /> erledigt</label>
             </div>
             <div class="step-grid">
               <figure class="shot">
-                <img src="assets/images/step8_upload_page.png" alt="GitHub Upload-Seite" class="screenshot" />
-                <div class="label-pin red" style="left: 51%; top: 39%;">Dateien hier hineinziehen</div>
-                <div class="label-pin blue" style="left: 50%; top: 73%;">Commit changes</div>
+                <img src="assets/images/step8_single_vs_group.svg" alt="Vergleich zwischen einzelner HTML-Datei und ganzer Projektstruktur" class="screenshot" />
+                <div class="label-pin blue" style="left: 24%; top: 26%;">nur index.html</div>
+                <div class="label-pin green" style="left: 71%; top: 24%;">index.html + CSS + JS + assets</div>
+                <div class="label-pin red" style="left: 69%; top: 74%;">alles gehört zusammen</div>
               </figure>
               <div class="task-box">
-                <p class="instruction">Lade die Webdateien hoch oder wähle sie über den Upload-Dialog aus.</p>
-                <p class="criterion">Erfolgskriterium: Die Dateien sind bereit für den Commit.</p>
+                <p class="instruction">Prüfe vor dem Upload, ob deine Website wirklich nur aus einer Startdatei besteht oder ob mehrere Dateien zusammen funktionieren müssen.</p>
+                <p class="criterion">Erfolgskriterium: Du weisst, wann eine einzelne <code>index.html</code> reicht und wann der ganze Projektordner hochgeladen werden muss.</p>
                 <label class="field">
-                  <span>Welche Dateien müssen für eine einfache Website mindestens vorhanden sein?</span>
-                  <textarea data-field="requiredFiles" rows="4" placeholder="z. B. index.html, style.css, Bilder"></textarea>
+                  <span>Welche Dateien gehören bei deinem Projekt zwingend zusammen?</span>
+                  <textarea data-field="fileGroupInsight" rows="4" placeholder="z. B. index.html, style.css, app.js und ein assets-Ordner mit Bildern"></textarea>
                 </label>
               </div>
             </div>
@@ -553,21 +555,23 @@
             <div class="step-head">
               <div>
                 <p class="step-kicker">Schritt 9</p>
-                <h3>Dateien vom Computer auswählen</h3>
+                <h3>Manuellen Upload ohne automatisierten Push verstehen</h3>
               </div>
               <label class="task-check"><input type="checkbox" data-task="9" /> erledigt</label>
             </div>
             <div class="step-grid">
               <figure class="shot">
-                <img src="assets/images/step9_file_dialog.png" alt="Dateidialog für den Upload" class="screenshot" />
-                <div class="label-pin blue" style="left: 49%; top: 52%;">Projektdateien wählen</div>
+                <img src="assets/images/step9_manual_upload_explained.svg" alt="GitHub-Upload im Browser ohne automatisierten Push" class="screenshot" />
+                <div class="label-pin red" style="left: 28%; top: 56%;">uploading an existing file</div>
+                <div class="label-pin blue" style="left: 50%; top: 37%;">Dateien per Browser hochladen</div>
+                <div class="label-pin green" style="left: 53%; top: 73%;">Commit changes</div>
               </figure>
               <div class="task-box">
-                <p class="instruction">Wähle die richtigen Dateien aus deinem Projektordner aus.</p>
-                <p class="criterion">Erfolgskriterium: Du lädst nur die benötigten Dateien hoch.</p>
+                <p class="instruction">Verstehe den Uploadweg im Browser, bevor du die eigentlichen Projektdateien auswählst und hochlädst.</p>
+                <p class="criterion">Erfolgskriterium: Du kannst erklären, wie der manuelle Upload über GitHub funktioniert.</p>
                 <label class="field">
-                  <span>Wie heisst die wichtigste Startdatei deiner Website?</span>
-                  <input type="text" data-field="entryFile" placeholder="z. B. index.html" />
+                  <span>Wie lädst du Dateien hoch, wenn nichts automatisch synchronisiert wird?</span>
+                  <textarea data-field="manualUploadPath" rows="4" placeholder="z. B. Im Repository auf uploading an existing file klicken, Dateien auswählen oder hineinziehen und danach committen."></textarea>
                 </label>
               </div>
             </div>
@@ -577,22 +581,75 @@
             <div class="step-head">
               <div>
                 <p class="step-kicker">Schritt 10</p>
-                <h3>Repository-Settings öffnen</h3>
+                <h3>Neues Repository prüfen und Upload-Einstieg finden</h3>
               </div>
               <label class="task-check"><input type="checkbox" data-task="10" /> erledigt</label>
             </div>
             <div class="step-grid">
               <figure class="shot">
-                <img src="assets/images/step10_settings.png" alt="Repository mit Settings-Reiter" class="screenshot" />
-                <div class="label-pin red" style="left: 57%; top: 12%;">Settings</div>
-                <div class="label-pin blue" style="left: 14%; top: 61%;">Pages in der Seitenleiste</div>
+                <img src="assets/images/step7_repo_created.png" alt="Fertig erstelltes Repository mit Link zum Hochladen vorhandener Dateien" class="screenshot" />
+                <div class="label-pin red" style="left: 27%; top: 56%;">uploading an existing file</div>
+                <div class="label-pin green" style="left: 16%; top: 17%;">Repository ist bereit</div>
               </figure>
               <div class="task-box">
-                <p class="instruction">Gehe in die Einstellungen deines Repositories.</p>
-                <p class="criterion">Erfolgskriterium: Der Bereich für GitHub Pages ist erreichbar.</p>
+                <p class="instruction">Schau dir dein neues Repository zuerst in Ruhe an und suche dann den Einstieg für den manuellen Upload.</p>
+                <p class="criterion">Erfolgskriterium: Du erkennst, dass das Repository angelegt ist und du weisst, wo du vorhandene Dateien hochladen kannst.</p>
                 <label class="field">
-                  <span>Wo findest du GitHub Pages?</span>
-                  <input type="text" data-field="pagesLocation" placeholder="z. B. links in den Settings" />
+                  <span>Woran siehst du, dass dein Repository jetzt bereit für den Upload ist?</span>
+                  <textarea data-field="repoCreatedHint" rows="4" placeholder="z. B. Der Repo-Name ist sichtbar und GitHub zeigt den Link zum Hochladen vorhandener Dateien."></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-11" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 11</p>
+                <h3>Dateien hochladen vorbereiten</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="11" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step8_upload_page.png" alt="GitHub Upload-Seite für den manuellen Datei-Upload" class="screenshot" />
+                <div class="label-pin red" style="left: 51%; top: 39%;">Dateien hier hineinziehen</div>
+                <div class="label-pin blue" style="left: 50%; top: 73%;">Commit changes</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Öffne die Upload-Seite und prüfe noch einmal, welche Dateien du gleich wirklich hochladen musst.</p>
+                <p class="criterion">Erfolgskriterium: Die richtigen Webdateien liegen bereit und du weisst, wohin sie auf GitHub kommen.</p>
+                <label class="field">
+                  <span>Welche Dateien müssen für deine Website mindestens dabei sein?</span>
+                  <textarea data-field="requiredFiles" rows="4" placeholder="z. B. index.html, style.css, app.js und Bilder im assets-Ordner"></textarea>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-12" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 12</p>
+                <h3>Dateien vom Computer auswählen und vollständig hochladen</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="12" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step9_file_dialog.png" alt="Dateidialog zur Auswahl der Projektdateien" class="screenshot" />
+                <div class="label-pin blue" style="left: 49%; top: 52%;">Projektdateien wählen</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Wähle die Dateien aus deinem Projektordner so aus, dass deine Website später vollständig funktioniert.</p>
+                <p class="criterion">Erfolgskriterium: Du lädst nicht nur eine einzelne Datei hoch, sondern alle Bestandteile, die deine Website braucht.</p>
+                <label class="field">
+                  <span>Wie heisst die wichtigste Startdatei deiner Website?</span>
+                  <input type="text" data-field="entryFile" placeholder="z. B. index.html" />
+                </label>
+                <label class="field">
+                  <span>Worauf musst du beim Hochladen zusätzlich achten?</span>
+                  <textarea data-field="uploadAttention" rows="3" placeholder="z. B. Dass auch CSS, JavaScript und Bilder mitkommen, wenn die Seite sie braucht."></textarea>
                 </label>
               </div>
             </div>
@@ -605,23 +662,48 @@
             <h2>Pages aktivieren und Ergebnis sichern</h2>
           </div>
 
-          <article id="step-11" class="panel step-card task">
+          <article id="step-13" class="panel step-card task">
             <div class="step-head">
               <div>
-                <p class="step-kicker">Schritt 11</p>
-                <h3>GitHub Pages konfigurieren</h3>
+                <p class="step-kicker">Schritt 13</p>
+                <h3>Repository-Settings öffnen</h3>
               </div>
-              <label class="task-check"><input type="checkbox" data-task="11" /> erledigt</label>
+              <label class="task-check"><input type="checkbox" data-task="13" /> erledigt</label>
             </div>
             <div class="step-grid">
               <figure class="shot">
-                <img src="assets/images/step11_pages.png" alt="GitHub Pages Einstellungen" class="screenshot" />
+                <img src="assets/images/step10_settings.png" alt="Repository mit geöffnetem Settings-Reiter" class="screenshot" />
+                <div class="label-pin red" style="left: 57%; top: 12%;">Settings</div>
+                <div class="label-pin blue" style="left: 14%; top: 61%;">Pages in der Seitenleiste</div>
+              </figure>
+              <div class="task-box">
+                <p class="instruction">Wenn die Dateien im Repository liegen, wechselst du in die Einstellungen, um aus dem Projekt eine veröffentlichte Website zu machen.</p>
+                <p class="criterion">Erfolgskriterium: Du findest den Bereich <code>Pages</code> in den Repository-Einstellungen.</p>
+                <label class="field">
+                  <span>Wo findest du GitHub Pages in deinem Repository?</span>
+                  <input type="text" data-field="pagesLocation" placeholder="z. B. links in den Settings in der Seitenleiste" />
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article id="step-14" class="panel step-card task">
+            <div class="step-head">
+              <div>
+                <p class="step-kicker">Schritt 14</p>
+                <h3>GitHub Pages konfigurieren</h3>
+              </div>
+              <label class="task-check"><input type="checkbox" data-task="14" /> erledigt</label>
+            </div>
+            <div class="step-grid">
+              <figure class="shot">
+                <img src="assets/images/step11_pages.png" alt="GitHub Pages Einstellungen mit Deploy from a branch" class="screenshot" />
                 <div class="label-pin red" style="left: 11%; top: 77%;">Pages</div>
                 <div class="label-pin green" style="left: 42%; top: 40%;">Deploy from a branch</div>
               </figure>
               <div class="task-box">
-                <p class="instruction">Wähle in den Einstellungen den Bereich für GitHub Pages aus.</p>
-                <p class="criterion">Erfolgskriterium: Die Publikationsart ist auf einen Branch eingestellt.</p>
+                <p class="instruction">Lege fest, aus welchem Branch und aus welchem Ordner GitHub deine Website veröffentlichen soll.</p>
+                <p class="criterion">Erfolgskriterium: Die Veröffentlichungsart ist richtig eingestellt und du kennst Branch und Ordner.</p>
                 <div class="double-field">
                   <label class="field">
                     <span>Welcher Branch wird verwendet?</span>
@@ -636,24 +718,24 @@
             </div>
           </article>
 
-          <article id="step-12" class="panel step-card task final-task">
+          <article id="step-15" class="panel step-card task final-task">
             <div class="step-head">
               <div>
-                <p class="step-kicker">Schritt 12</p>
-                <h3>Seite aufrufen, URL eintragen und reflektieren</h3>
+                <p class="step-kicker">Schritt 15</p>
+                <h3>Seite veröffentlichen, URL prüfen und Ergebnis reflektieren</h3>
               </div>
-              <label class="task-check"><input type="checkbox" data-task="12" /> erledigt</label>
+              <label class="task-check"><input type="checkbox" data-task="15" /> erledigt</label>
             </div>
             <div class="step-grid">
               <figure class="shot">
-                <img src="assets/images/step12_pages_branch.png" alt="Branch und Root für GitHub Pages" class="screenshot" />
+                <img src="assets/images/step12_pages_branch.png" alt="GitHub Pages mit Branch main, Root-Ordner und Save-Schaltfläche" class="screenshot" />
                 <div class="label-pin blue" style="left: 36%; top: 40%;">main</div>
                 <div class="label-pin blue" style="left: 43%; top: 40%;">/ (root)</div>
                 <div class="label-pin red" style="left: 49%; top: 41%;">Save</div>
               </figure>
               <div class="task-box">
-                <p class="instruction">Speichere die Pages-Einstellungen, warte auf die Bereitstellung und prüfe die fertige Seite.</p>
-                <p class="criterion">Erfolgskriterium: Die Website ist über eine URL erreichbar.</p>
+                <p class="instruction">Speichere die Pages-Einstellungen, warte kurz auf die Bereitstellung und kontrolliere dann die fertige Website über ihre URL.</p>
+                <p class="criterion">Erfolgskriterium: Deine Website ist öffentlich erreichbar und du kannst den Ablauf in eigenen Worten zusammenfassen.</p>
                 <label class="field">
                   <span>GitHub-Pages-URL</span>
                   <input type="url" data-field="finalUrl" placeholder="https://username.github.io/repo/" />

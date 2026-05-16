@@ -33,13 +33,17 @@ const QUIZ_CONFIG = {
     failure: "Prüfe noch einmal, ob die Seite öffentlich erreichbar sein soll."
   },
   8: {
-    question: "Welche Datei ist für eine einfache Website fast immer unverzichtbar?",
-    options: ["index.html", "notes.txt", "draft.docx"],
-    correct: "index.html",
-    success: "Ja. Ohne index.html startet die Website meist nicht korrekt.",
-    failure: "Tipp: Der Browser braucht eine Startseite."
+    question: "Wann musst du mehr als nur die index.html hochladen?",
+    options: [
+      "Wenn die Website noch CSS, JavaScript oder Bilder braucht",
+      "Nur wenn das Repository private ist",
+      "Nur wenn GitHub Pages deaktiviert ist"
+    ],
+    correct: "Wenn die Website noch CSS, JavaScript oder Bilder braucht",
+    success: "Genau. Alle zusammengehörigen Projektdateien müssen mit hochgeladen werden.",
+    failure: "Denk an Websites, die nicht nur aus einer einzelnen HTML-Datei bestehen."
   },
-  11: {
+  14: {
     question: "Welche Bereitstellungsart wählt man hier im gezeigten Ablauf?",
     options: ["Deploy from a branch", "GitHub Actions only", "No deployment"],
     correct: "Deploy from a branch",
@@ -74,8 +78,8 @@ const BADGE_CONFIG = [
     id: "upload-navigator",
     icon: "UN",
     title: "Upload-Navigator",
-    description: "Dateien sicher hochgeladen und richtig eingeordnet.",
-    earned: (state) => [7, 8, 9].every((step) => state[`task_${step}`]) && Boolean(state.quiz_8_passed)
+    description: "GitHub verstanden, Dateien eingeordnet und manuell hochgeladen.",
+    earned: (state) => [7, 8, 9, 10, 11, 12].every((step) => state[`task_${step}`]) && Boolean(state.quiz_8_passed)
   },
   {
     id: "pages-champion",
@@ -83,8 +87,8 @@ const BADGE_CONFIG = [
     title: "Pages-Champion",
     description: "GitHub Pages aktiviert und URL sauber dokumentiert.",
     earned: (state) =>
-      [10, 11, 12].every((step) => state[`task_${step}`]) &&
-      Boolean(state.quiz_11_passed) &&
+      [13, 14, 15].every((step) => state[`task_${step}`]) &&
+      Boolean(state.quiz_14_passed) &&
       Boolean(state.field_finalUrl || state.projectUrl)
   }
 ];
