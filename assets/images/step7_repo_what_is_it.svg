@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">Platzhalter für Schritt 7</title>
+  <title id="title">Warum GitHub und ein Repository gebraucht werden</title>
   <desc id="desc">Erklärung, wofür GitHub und ein Repository da sind.</desc>
   <rect width="1600" height="900" fill="#f4efe6"/>
   <rect x="70" y="70" width="1460" height="760" rx="34" fill="#fffaf2" stroke="#d8c6ad" stroke-width="6"/>
@@ -22,5 +22,5 @@
   <text x="940" y="465" font-family="Courier New, monospace" font-size="28" fill="#4b3e33">style.css</text>
   <text x="940" y="565" font-family="Courier New, monospace" font-size="28" fill="#4b3e33">app.js</text>
   <text x="940" y="665" font-family="Courier New, monospace" font-size="28" fill="#4b3e33">assets/</text>
-  <text x="840" y="790" font-family="Arial, sans-serif" font-size="22" fill="#6f6255">Platzhalter: später durch echten Screenshot ersetzen</text>
+  <text x="840" y="790" font-family="Arial, sans-serif" font-size="22" fill="#6f6255">Ein Repository ist der geordnete Online-Ort, aus dem GitHub Pages später die Website baut.</text>
 </svg>

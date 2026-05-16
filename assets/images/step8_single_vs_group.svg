@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">Platzhalter für Schritt 8</title>
+  <title id="title">Wann eine einzelne Datei reicht und wann nicht</title>
   <desc id="desc">Vergleich zwischen einzelner HTML-Datei und ganzer Dateigruppe.</desc>
   <rect width="1600" height="900" fill="#f4efe6"/>
   <rect x="70" y="70" width="1460" height="760" rx="34" fill="#fffaf2" stroke="#d8c6ad" stroke-width="6"/>
@@ -20,5 +20,5 @@
   <text x="890" y="478" font-family="Courier New, monospace" font-size="28" fill="#3c5d39">style.css</text>
   <text x="890" y="568" font-family="Courier New, monospace" font-size="28" fill="#3c5d39">app.js</text>
   <text x="890" y="658" font-family="Courier New, monospace" font-size="28" fill="#3c5d39">assets/</text>
-  <text x="120" y="800" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Merksatz: Wenn Bilder, CSS oder JavaScript dazugehören, muss die ganze Gruppe hochgeladen werden.</text>
+  <text x="120" y="800" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Merksatz: Wenn Bilder, CSS oder JavaScript dazugehören, muss die ganze Dateigruppe ins Repository.</text>
 </svg>

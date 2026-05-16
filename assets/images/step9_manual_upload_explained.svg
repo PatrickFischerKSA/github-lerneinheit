@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">Platzhalter für Schritt 9</title>
+  <title id="title">Manueller Upload im Browser</title>
   <desc id="desc">Manueller Upload im Browser ohne automatisierten Push.</desc>
   <rect width="1600" height="900" fill="#f4efe6"/>
   <rect x="70" y="70" width="1460" height="760" rx="34" fill="#fffaf2" stroke="#d8c6ad" stroke-width="6"/>
@@ -11,5 +11,5 @@
   <text x="265" y="660" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#4b3e33">uploading an existing file</text>
   <rect x="980" y="615" width="280" height="72" rx="20" fill="#d5e6cf"/>
   <text x="1030" y="660" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#355c33">Commit changes</text>
-  <text x="140" y="800" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Platzhalter: Hier später echten GitHub-Upload-Screenshot mit Markierungen einsetzen.</text>
+  <text x="140" y="800" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Hier passiert der Upload von Hand: Dateien auswählen oder hineinziehen und dann mit Commit speichern.</text>
 </svg>
