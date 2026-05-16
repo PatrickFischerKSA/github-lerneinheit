@@ -1,15 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">Wann eine einzelne Datei reicht und wann nicht</title>
+  <title id="title">Dateiabhängigkeiten in einer Website</title>
   <desc id="desc">Vergleich zwischen einzelner HTML-Datei und ganzer Dateigruppe.</desc>
   <rect width="1600" height="900" fill="#f4efe6"/>
   <rect x="70" y="70" width="1460" height="760" rx="34" fill="#fffaf2" stroke="#d8c6ad" stroke-width="6"/>
-  <text x="140" y="155" font-family="Arial, sans-serif" font-size="36" font-weight="700" fill="#4b3e33">Einzeldatei oder ganze Dateigruppe?</text>
+  <text x="140" y="155" font-family="Arial, sans-serif" font-size="36" font-weight="700" fill="#4b3e33">Einzeldatei oder funktionierendes Dateisystem?</text>
   <rect x="120" y="220" width="560" height="520" rx="28" fill="#ffffff" stroke="#6c8fb0" stroke-width="6"/>
   <text x="170" y="295" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#35526e">Fall 1: Standalone-HTML</text>
   <rect x="190" y="355" width="420" height="88" rx="18" fill="#e9f1f8"/>
   <text x="245" y="410" font-family="Courier New, monospace" font-size="32" fill="#35526e">index.html</text>
   <text x="170" y="505" font-family="Arial, sans-serif" font-size="26" fill="#5c5147">Reicht nur dann, wenn wirklich</text>
   <text x="170" y="545" font-family="Arial, sans-serif" font-size="26" fill="#5c5147">alles in dieser Datei steckt.</text>
+  <text x="170" y="615" font-family="Arial, sans-serif" font-size="22" fill="#5c5147">Keine externen Pfade, keine</text>
+  <text x="170" y="648" font-family="Arial, sans-serif" font-size="22" fill="#5c5147">abhängigen Zusatzdateien.</text>
   <rect x="760" y="220" width="700" height="520" rx="28" fill="#ffffff" stroke="#70956d" stroke-width="6"/>
   <text x="810" y="295" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#3c5d39">Fall 2: Mehrteiliges Webprojekt</text>
   <rect x="840" y="345" width="540" height="70" rx="18" fill="#edf5eb"/>
@@ -20,5 +22,14 @@
   <text x="890" y="478" font-family="Courier New, monospace" font-size="28" fill="#3c5d39">style.css</text>
   <text x="890" y="568" font-family="Courier New, monospace" font-size="28" fill="#3c5d39">app.js</text>
   <text x="890" y="658" font-family="Courier New, monospace" font-size="28" fill="#3c5d39">assets/</text>
-  <text x="120" y="800" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Merksatz: Wenn Bilder, CSS oder JavaScript dazugehören, muss die ganze Dateigruppe ins Repository.</text>
+  <line x1="1030" y1="355" x2="1030" y2="425" stroke="#6c88c7" stroke-width="8" stroke-linecap="round"/>
+  <polygon points="1030,445 1017,420 1043,420" fill="#6c88c7"/>
+  <line x1="1070" y1="355" x2="1070" y2="515" stroke="#8f7f66" stroke-width="8" stroke-linecap="round"/>
+  <polygon points="1070,535 1057,510 1083,510" fill="#8f7f66"/>
+  <line x1="1110" y1="355" x2="1110" y2="605" stroke="#a8794c" stroke-width="8" stroke-linecap="round"/>
+  <polygon points="1110,625 1097,600 1123,600" fill="#a8794c"/>
+  <text x="1140" y="405" font-family="Arial, sans-serif" font-size="22" fill="#5c5147">Pfad zu Layout und Farben</text>
+  <text x="1140" y="495" font-family="Arial, sans-serif" font-size="22" fill="#5c5147">Pfad zu Verhalten und Reaktionen</text>
+  <text x="1140" y="585" font-family="Arial, sans-serif" font-size="22" fill="#5c5147">Pfad zu Bildern, Audio, PDFs, Medien</text>
+  <text x="120" y="800" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Merksatz: Wenn Bilder, CSS oder JavaScript dazugehören, muss die ganze Dateigruppe mitsamt ihrer Pfade ins Repository.</text>
 </svg>

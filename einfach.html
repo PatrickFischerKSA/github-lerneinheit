@@ -515,7 +515,7 @@
             <div class="step-head">
               <div>
                 <p class="step-kicker">Schritt 8</p>
-                <h3>Einzelne HTML-Datei oder ganze Dateigruppe unterscheiden</h3>
+                <h3>Dateiabhängigkeiten verstehen: einzelne HTML-Datei oder ganze Dateigruppe?</h3>
               </div>
               <label class="task-check"><input type="checkbox" data-task="8" /> erledigt</label>
             </div>
@@ -527,15 +527,23 @@
                 <div class="label-pin red" style="left: 69%; top: 74%;">alles gehört zusammen</div>
               </figure>
               <div class="task-box">
-                <p class="instruction">Prüfe vor dem Upload, ob deine Website wirklich nur aus einer Startdatei besteht oder ob HTML, CSS, JavaScript und Bilder zusammenarbeiten.</p>
-                <p class="criterion">Erfolgskriterium: Du weisst, dass eine einzelne <code>index.html</code> nur dann reicht, wenn sie alles enthält. Sonst muss die ganze Dateigruppe hochgeladen werden.</p>
+                <p class="instruction">Prüfe vor dem Upload nicht nur, wie viele Dateien es gibt, sondern wie sie voneinander abhängen. Eine Website funktioniert als Kette: Die HTML-Datei verweist auf andere Dateien, und diese müssen genau dort liegen, wo die HTML-Datei sie erwartet.</p>
+                <p class="criterion">Erfolgskriterium: Du kannst erklären, dass eine einzelne <code>index.html</code> nur dann reicht, wenn sie alles enthält. Sobald sie CSS, JavaScript, Bilder, Audio oder Unterordner über feste Pfade anspricht, muss die ganze Dateigruppe mit ihren Beziehungen hochgeladen werden.</p>
                 <div class="prompt-example">
                   <strong>Merke:</strong>
                   <p>Wenn die HTML-Datei auf <code>style.css</code>, <code>app.js</code> oder Bilder verweist, müssen diese Dateien mit ins Repository. Sonst ist die Website unvollständig.</p>
                 </div>
+                <div class="prompt-example">
+                  <strong>Konkretes Beispiel:</strong>
+                  <p>In <code>index.html</code> kann stehen: <code>&lt;link rel="stylesheet" href="style.css"&gt;</code>, <code>&lt;script src="app.js"&gt;&lt;/script&gt;</code> oder <code>&lt;img src="assets/bild.jpg"&gt;</code>. Diese Angaben sind Pfade. Wenn die Datei an diesem Ort fehlt, bricht genau dieser Teil der Website weg.</p>
+                </div>
+                <div class="prompt-example">
+                  <strong>Darum reicht „Dateien hochladen“ als Erklärung nicht:</strong>
+                  <p>Entscheidend ist nicht nur, dass die Dateien vorhanden sind, sondern dass ihre Ordnung gleich bleibt. Das Repository sichert also nicht nur Material, sondern ein funktionierendes System aus Verweisen und Reaktionen.</p>
+                </div>
                 <label class="field">
                   <span>Welche Dateien gehören bei deinem Projekt zwingend zusammen?</span>
-                  <textarea data-field="fileGroupInsight" rows="4" placeholder="z. B. index.html, style.css, app.js und ein assets-Ordner mit Bildern"></textarea>
+                  <textarea data-field="fileGroupInsight" rows="5" placeholder="z. B. index.html verweist auf style.css und app.js; ausserdem lädt sie Bilder aus dem assets-Ordner. Deshalb müssen alle diese Teile in derselben Struktur hochgeladen werden."></textarea>
                 </label>
               </div>
             </div>
