@@ -1081,48 +1081,73 @@
               <p>Codex kann Dateien öffnen, Texte oder Code ändern, neue Dateien ergänzen und danach mit dir prüfen, ob die Website noch funktioniert.</p>
             </article>
             <article class="resource-card">
-              <p class="resource-type">Wörter ohne Fachchinesisch</p>
+              <p class="resource-type">Wörter kurz erklärt</p>
               <h3>Git, Commit und Push</h3>
               <p><code>Git</code> merkt sich Änderungen. Ein <code>Commit</code> ist eine gespeicherte Zwischenversion. <code>Push</code> bedeutet: Diese Version wird zu GitHub hochgeladen.</p>
+            </article>
+            <article class="resource-card">
+              <p class="resource-type">Wichtig für den Start</p>
+              <h3>Diese Option ist für später</h3>
+              <p>Für diese Lernstrecke reicht der Browser-Upload. Der Codex-GitHub-Weg ist sinnvoll, wenn du später öfter an derselben Website weiterarbeitest.</p>
             </article>
           </div>
           <div class="guide-grid">
             <article class="guide-card">
-              <strong>1. Verstehen, wo dein Projekt liegt</strong>
-              <p>Dein Repository ist der Online-Projektordner auf GitHub. Dort liegen alle Dateien, die zusammen deine Website bilden.</p>
+              <strong>1. GitHub in Codex/ChatGPT verbinden</strong>
+              <p>Öffne Codex oder ChatGPT. Klicke oben rechts auf dein Profil. Öffne <strong>Einstellungen</strong>, dann <strong>Apps</strong>. Suche <strong>GitHub</strong> und klicke auf <strong>Verbinden</strong>.</p>
             </article>
             <article class="guide-card">
-              <strong>2. Codex mit GitHub verbinden</strong>
-              <p>In Codex erlaubst du den Zugriff auf GitHub. Das ist wie eine Erlaubnis: Codex darf dein Projekt sehen und mit dir daran arbeiten.</p>
+              <strong>2. Zugriff auf GitHub erlauben</strong>
+              <p>Du wirst zu GitHub weitergeleitet. Melde dich dort an. Klicke auf <strong>Authorize</strong>, <strong>Autorisieren</strong>, <strong>Install</strong> oder <strong>Installieren</strong>. Damit erlaubst du die Verbindung.</p>
             </article>
             <article class="guide-card">
-              <strong>3. Das richtige Repository wählen</strong>
-              <p>Du wählst genau das Projekt aus, an dem du arbeiten willst. Wichtig: Nicht irgendein Repository, sondern das Repository deiner Website.</p>
+              <strong>3. Das richtige Repository freigeben</strong>
+              <p>Wähle nicht automatisch alle Projekte aus. Klicke auf <strong>Only select repositories</strong> oder <strong>Nur ausgewählte Repositories</strong>. Wähle genau das Repository deiner Website und speichere.</p>
             </article>
             <article class="guide-card">
-              <strong>4. Eine Arbeitskopie holen</strong>
-              <p>Das Projekt wird auf deinen Computer geholt. Das nennt man manchmal <code>clone</code>. Gemeint ist einfach: Du bekommst eine lokale Kopie der Online-Dateien.</p>
+              <strong>4. Git auf dem Computer prüfen</strong>
+              <p>Öffne das Terminal. Tippe <code>git --version</code>. Wenn eine Versionsnummer erscheint, ist Git bereit. Wenn nicht: Mac mit <code>xcode-select --install</code>, Windows mit <strong>Git for Windows</strong>.</p>
             </article>
             <article class="guide-card">
-              <strong>5. Lokal arbeiten und prüfen</strong>
-              <p>Codex ändert Dateien in dieser Kopie. Du prüfst danach: Sind Texte richtig? Funktionieren Bilder, Layout und Links noch?</p>
+              <strong>5. Link zum Repository kopieren</strong>
+              <p>Öffne dein Repository auf GitHub. Klicke auf den grünen Button <strong>Code</strong>. Wähle <strong>HTTPS</strong> und kopiere den Link. Er endet meistens mit <code>.git</code>.</p>
             </article>
             <article class="guide-card">
-              <strong>6. Änderungen als Version speichern</strong>
-              <p>Wenn alles stimmt, werden die Änderungen als neue Version gemerkt. Das heisst <code>commit</code>. So bleibt nachvollziehbar, was geändert wurde.</p>
+              <strong>6. Projekt auf den Computer holen</strong>
+              <p>Gehe im Terminal an den Ort, wo dein Projektordner liegen soll. Tippe <code>git clone DEIN-LINK</code>. Dadurch entsteht eine lokale Kopie deines GitHub-Projekts.</p>
             </article>
             <article class="guide-card">
-              <strong>7. Die neue Version zu GitHub schicken</strong>
-              <p>Erst jetzt wird die neue Version online ins Repository übertragen. Das heisst <code>push</code>. Danach kann GitHub Pages die Website mit dem neuen Stand anzeigen.</p>
+              <strong>7. In den Projektordner wechseln</strong>
+              <p>Tippe <code>cd ORDNERNAME</code>. Der Ordnername ist meistens der Name deines Repositorys. Jetzt arbeitest du im richtigen Projektordner.</p>
             </article>
             <article class="guide-card">
-              <strong>8. Wann dieser Weg sinnvoll ist</strong>
-              <p>Dieser Weg lohnt sich vor allem bei grösseren Projekten oder wenn du später oft weiterarbeitest. Für den Einstieg reicht der Browser-Weg aus dieser Lernstrecke völlig.</p>
+              <strong>8. Codex im Projekt arbeiten lassen</strong>
+              <p>Öffne in Codex den geklonten Projektordner: <strong>Datei</strong> oder <strong>File</strong>, dann <strong>Ordner öffnen</strong> oder <strong>Open Folder</strong>. Danach formulierst du den Änderungswunsch.</p>
+            </article>
+            <article class="guide-card">
+              <strong>9. Änderungen anschauen</strong>
+              <p>Tippe <code>git status</code>. Git zeigt dir, welche Dateien geändert wurden. Öffne die Website lokal oder prüfe die Dateien, bevor du etwas hochlädst.</p>
+            </article>
+            <article class="guide-card">
+              <strong>10. Änderungen vormerken</strong>
+              <p>Tippe <code>git add .</code>. Damit sagst du Git: Diese geänderten Dateien sollen in die nächste gespeicherte Version hinein.</p>
+            </article>
+            <article class="guide-card">
+              <strong>11. Version speichern</strong>
+              <p>Tippe <code>git commit -m "Kurze Beschreibung"</code>. Ersetze den Text in Anführungszeichen durch eine kurze Erklärung, zum Beispiel <code>"Texte vereinfacht"</code>.</p>
+            </article>
+            <article class="guide-card">
+              <strong>12. Version zu GitHub hochladen</strong>
+              <p>Tippe <code>git push</code>. Danach liegt die neue Version online in deinem Repository. GitHub Pages kann nun den neuen Stand deiner Website anzeigen.</p>
             </article>
           </div>
           <div class="prompt-example">
+            <strong>Die Befehle in der richtigen Reihenfolge:</strong>
+            <p><code>git --version</code> prüft Git. <code>git clone DEIN-LINK</code> holt das Projekt. <code>cd ORDNERNAME</code> öffnet den Projektordner. <code>git status</code> zeigt Änderungen. <code>git add .</code> merkt sie vor. <code>git commit -m "Beschreibung"</code> speichert eine Version. <code>git push</code> lädt sie zu GitHub hoch.</p>
+          </div>
+          <div class="prompt-example">
             <strong>Kurz gesagt:</strong>
-            <p>Der Browser-Weg ist: Dateien direkt auf GitHub hochladen. Der Codex-GitHub-Weg ist: Projekt auf den Computer holen, dort mit Codex bearbeiten, die Änderungen als neue Version speichern und diese Version wieder zu GitHub hochladen.</p>
+            <p>Der Browser-Weg ist: Dateien direkt auf GitHub hochladen. Der Codex-GitHub-Weg ist: GitHub verbinden, Repository freigeben, Projekt auf den Computer holen, mit Codex bearbeiten, mit <code>git add .</code> und <code>git commit</code> speichern und mit <code>git push</code> wieder zu GitHub hochladen.</p>
           </div>
         </section>
       </section>
