@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">Manueller Upload im Browser</title>
+  <title id="title">Dateien von Hand hochladen</title>
   <desc id="desc">Manueller Upload im Browser ohne automatisierten Push.</desc>
   <rect width="1600" height="900" fill="#f4efe6"/>
   <rect x="70" y="70" width="1460" height="760" rx="34" fill="#fffaf2" stroke="#d8c6ad" stroke-width="6"/>
-  <text x="130" y="155" font-family="Arial, sans-serif" font-size="36" font-weight="700" fill="#4b3e33">Manueller Upload über GitHub im Browser</text>
+  <text x="130" y="155" font-family="Arial, sans-serif" font-size="36" font-weight="700" fill="#4b3e33">Dateien von Hand über GitHub hochladen</text>
   <rect x="120" y="220" width="1360" height="520" rx="28" fill="#ffffff" stroke="#d8c6ad" stroke-width="4"/>
   <rect x="200" y="315" width="1200" height="240" rx="28" fill="#f6efe4" stroke="#c7b293" stroke-dasharray="18 12" stroke-width="6"/>
   <text x="480" y="440" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#6a5646">Dateien hier hineinziehen oder auswählen</text>
@@ -11,5 +11,5 @@
   <text x="265" y="660" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#4b3e33">uploading an existing file</text>
   <rect x="980" y="615" width="280" height="72" rx="20" fill="#d5e6cf"/>
   <text x="1030" y="660" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#355c33">Commit changes</text>
-  <text x="140" y="800" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Hier passiert der Upload von Hand: Dateien auswählen oder hineinziehen und dann mit Commit speichern.</text>
+  <text x="140" y="800" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Hier lädst du von Hand hoch: Dateien wählen oder hineinziehen und dann speichern.</text>
 </svg>
