@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Projektordner in Codex öffnen</title>
+  <desc id="desc">Screenshot-Grafik mit markiertem Menü Datei, Ordner öffnen und ausgewähltem Projektordner.</desc>
+  <rect width="1200" height="720" rx="36" fill="#f7f1e8"/>
+  <rect x="80" y="70" width="1040" height="580" rx="28" fill="#ffffff" stroke="#ded6ca" stroke-width="4"/>
+  <rect x="80" y="70" width="1040" height="72" rx="28" fill="#243447"/>
+  <text x="130" y="118" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff">Codex</text>
+  <rect x="125" y="160" width="150" height="54" rx="12" fill="#dce9df" stroke="#85a38f" stroke-width="4"/>
+  <text x="173" y="195" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#243447">File</text>
+  <circle cx="285" cy="165" r="25" fill="#c47b57"/>
+  <text x="278" y="174" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#fff">1</text>
+  <rect x="125" y="225" width="300" height="190" rx="18" fill="#ffffff" stroke="#ded6ca" stroke-width="3"/>
+  <rect x="155" y="285" width="240" height="58" rx="14" fill="#eff7f0" stroke="#85a38f" stroke-width="4"/>
+  <text x="180" y="322" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#243447">Open Folder</text>
+  <circle cx="410" cy="285" r="25" fill="#c47b57"/>
+  <text x="403" y="294" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#fff">2</text>
+  <rect x="510" y="180" width="500" height="350" rx="22" fill="#f6f8fa" stroke="#d8dee4" stroke-width="3"/>
+  <text x="550" y="235" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#243447">Ordner auswählen</text>
+  <rect x="550" y="280" width="410" height="58" rx="14" fill="#ffffff" stroke="#d8dee4" stroke-width="3"/>
+  <text x="585" y="318" font-family="Arial, sans-serif" font-size="23" fill="#57606a">Downloads</text>
+  <rect x="550" y="358" width="410" height="64" rx="14" fill="#eff7f0" stroke="#85a38f" stroke-width="5"/>
+  <text x="585" y="399" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#243447">github-lerneinheit</text>
+  <circle cx="970" cy="360" r="25" fill="#c47b57"/>
+  <text x="963" y="369" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#fff">3</text>
+  <rect x="785" y="450" width="175" height="58" rx="29" fill="#85a38f"/>
+  <text x="823" y="487" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#ffffff">Öffnen</text>
+  <circle cx="780" cy="450" r="25" fill="#c47b57"/>
+  <text x="773" y="459" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#fff">4</text>
+  <text x="150" y="610" font-family="Arial, sans-serif" font-size="24" fill="#8a4f2b">Wichtig: Öffne den ganzen Projektordner, nicht nur eine einzelne HTML-Datei.</text>
+</svg>

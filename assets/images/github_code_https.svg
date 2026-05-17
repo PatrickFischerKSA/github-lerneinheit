@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Repository-Link auf GitHub kopieren</title>
+  <desc id="desc">Screenshot-Grafik mit markiertem Code-Button, HTTPS-Reiter und Kopierknopf.</desc>
+  <rect width="1200" height="720" rx="36" fill="#f7f1e8"/>
+  <rect x="80" y="70" width="1040" height="580" rx="28" fill="#ffffff" stroke="#ded6ca" stroke-width="4"/>
+  <rect x="80" y="70" width="1040" height="72" rx="28" fill="#1f2328"/>
+  <text x="135" y="118" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff">patrickfischerksa / github-lerneinheit</text>
+  <rect x="865" y="170" width="150" height="58" rx="14" fill="#2da44e"/>
+  <text x="912" y="207" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#ffffff">Code</text>
+  <circle cx="1030" cy="184" r="27" fill="#c47b57"/>
+  <text x="1022" y="194" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#fff">1</text>
+  <rect x="660" y="240" width="410" height="315" rx="22" fill="#ffffff" stroke="#d8dee4" stroke-width="3"/>
+  <text x="700" y="292" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#243447">Clone</text>
+  <rect x="700" y="320" width="108" height="48" rx="12" fill="#eff7f0" stroke="#85a38f" stroke-width="4"/>
+  <text x="724" y="352" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#243447">HTTPS</text>
+  <circle cx="820" cy="320" r="24" fill="#c47b57"/>
+  <text x="813" y="329" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#fff">2</text>
+  <rect x="700" y="395" width="265" height="55" rx="12" fill="#f6f8fa" stroke="#d8dee4" stroke-width="3"/>
+  <text x="722" y="430" font-family="Arial, monospace" font-size="18" fill="#57606a">https://github.com/...</text>
+  <rect x="972" y="395" width="58" height="55" rx="12" fill="#f1eadf" stroke="#ded6ca" stroke-width="3"/>
+  <text x="991" y="431" font-family="Arial, sans-serif" font-size="24" fill="#243447">⧉</text>
+  <circle cx="1035" cy="410" r="24" fill="#c47b57"/>
+  <text x="1028" y="419" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#fff">3</text>
+  <rect x="135" y="255" width="440" height="250" rx="20" fill="#f6f8fa" stroke="#d8dee4" stroke-width="3"/>
+  <text x="170" y="315" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#243447">Merke dir:</text>
+  <text x="170" y="370" font-family="Arial, sans-serif" font-size="24" fill="#57606a">Der kopierte Link kommt gleich</text>
+  <text x="170" y="410" font-family="Arial, sans-serif" font-size="24" fill="#57606a">hinter den Befehl git clone.</text>
+  <text x="170" y="465" font-family="Arial, monospace" font-size="25" fill="#8a4f2b">git clone DEIN-LINK</text>
+</svg>

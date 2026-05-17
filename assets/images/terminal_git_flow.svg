@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Git-Befehle in der richtigen Reihenfolge</title>
+  <desc id="desc">Terminal-Screenshot-Grafik mit markierter Befehlsfolge von git version bis git push.</desc>
+  <rect width="1200" height="720" rx="36" fill="#f7f1e8"/>
+  <rect x="85" y="70" width="1030" height="580" rx="28" fill="#1f2328" stroke="#ded6ca" stroke-width="4"/>
+  <rect x="85" y="70" width="1030" height="58" rx="28" fill="#343a40"/>
+  <circle cx="130" cy="99" r="11" fill="#ff5f57"/>
+  <circle cx="165" cy="99" r="11" fill="#ffbd2e"/>
+  <circle cx="200" cy="99" r="11" fill="#28c840"/>
+  <text x="245" y="108" font-family="Arial, sans-serif" font-size="22" fill="#d8dee4">Terminal</text>
+  <text x="130" y="180" font-family="Arial, monospace" font-size="25" fill="#d8dee4">$ git --version</text>
+  <text x="155" y="220" font-family="Arial, sans-serif" font-size="21" fill="#9fb1bd">prüft, ob Git bereit ist</text>
+  <text x="130" y="280" font-family="Arial, monospace" font-size="25" fill="#d8dee4">$ git clone https://github.com/name/projekt.git</text>
+  <text x="155" y="320" font-family="Arial, sans-serif" font-size="21" fill="#9fb1bd">holt das Repository auf den Computer</text>
+  <text x="130" y="380" font-family="Arial, monospace" font-size="25" fill="#d8dee4">$ cd projekt</text>
+  <text x="155" y="420" font-family="Arial, sans-serif" font-size="21" fill="#9fb1bd">wechselt in den Projektordner</text>
+  <text x="130" y="480" font-family="Arial, monospace" font-size="25" fill="#d8dee4">$ git status</text>
+  <text x="155" y="520" font-family="Arial, sans-serif" font-size="21" fill="#9fb1bd">zeigt, welche Dateien geändert sind</text>
+  <text x="610" y="480" font-family="Arial, monospace" font-size="25" fill="#d8dee4">$ git add .</text>
+  <text x="635" y="520" font-family="Arial, sans-serif" font-size="21" fill="#9fb1bd">merkt alle Änderungen vor</text>
+  <text x="610" y="575" font-family="Arial, monospace" font-size="25" fill="#d8dee4">$ git commit -m "Beschreibung"</text>
+  <text x="635" y="615" font-family="Arial, sans-serif" font-size="21" fill="#9fb1bd">speichert eine neue Version</text>
+  <text x="130" y="595" font-family="Arial, monospace" font-size="25" fill="#d8dee4">$ git push</text>
+  <text x="155" y="635" font-family="Arial, sans-serif" font-size="21" fill="#9fb1bd">lädt die Version zu GitHub hoch</text>
+  <circle cx="88" cy="171" r="24" fill="#c47b57"/>
+  <text x="81" y="180" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">1</text>
+  <circle cx="88" cy="271" r="24" fill="#c47b57"/>
+  <text x="81" y="280" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">2</text>
+  <circle cx="88" cy="371" r="24" fill="#c47b57"/>
+  <text x="81" y="380" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">3</text>
+  <circle cx="88" cy="471" r="24" fill="#c47b57"/>
+  <text x="81" y="480" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">4</text>
+  <circle cx="568" cy="471" r="24" fill="#c47b57"/>
+  <text x="561" y="480" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">5</text>
+  <circle cx="568" cy="566" r="24" fill="#c47b57"/>
+  <text x="561" y="575" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">6</text>
+  <circle cx="88" cy="586" r="24" fill="#c47b57"/>
+  <text x="81" y="595" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">7</text>
+</svg>
