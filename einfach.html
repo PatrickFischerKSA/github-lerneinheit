@@ -952,61 +952,70 @@
             </div>
           </div>
           <p class="lead compact">
-            Bis hier hast du den einfachen Weg kennengelernt: Dateien im Browser hochladen und
-            GitHub Pages von Hand einrichten. Später kannst du auch einen komfortableren Weg
-            benutzen: Codex arbeitet direkt mit deinem Projekt, und du speicherst neue Versionen
-            danach mit Git auf GitHub.
+            Bis hier hast du den einfachen Weg kennengelernt: Du lädst Dateien direkt im Browser
+            zu GitHub hoch. Später gibt es auch einen zweiten Weg: Dein Projekt liegt weiterhin
+            auf GitHub, aber du arbeitest zuerst an einer Kopie auf deinem Computer. Codex kann
+            dir dabei helfen. Erst wenn alles passt, wird die neue Version wieder zu GitHub
+            hochgeladen.
           </p>
           <div class="prompt-example">
             <strong>Wichtiger Hinweis:</strong>
-            <p>Diese Variante funktioniert vor allem mit einem bezahlten Konto wie <strong>ChatGPT Plus</strong> gut. Dort ist die Arbeit mit Codex in der Regel deutlich sinnvoller, flüssiger und verlässlicher. Mit einem Gratiskonto ist sie zwar grundsätzlich auch möglich, aber meist mit starken Einschränkungen, weniger Komfort und weniger dauerhaft nutzbaren Funktionen verbunden.</p>
+            <p>Diese Variante funktioniert vor allem mit einem bezahlten Konto wie <strong>ChatGPT Plus</strong> gut. Dort kann Codex meist länger, flüssiger und verlässlicher an Projekten arbeiten. Mit einem Gratiskonto ist der Weg grundsätzlich auch möglich, aber oft stark eingeschränkt: weniger Zeit, weniger Komfort und weniger Möglichkeiten, dauerhaft an einem Projekt weiterzuarbeiten.</p>
           </div>
           <div class="resource-grid">
             <article class="resource-card">
-              <p class="resource-type">Warum das hilfreich ist</p>
-              <h3>Weniger Handarbeit</h3>
-              <p>Du musst nicht jedes Mal alles einzeln über die GitHub-Webseite hochladen. Codex kann direkt am Projekt arbeiten, und du überträgst die Änderungen danach gesammelt.</p>
+              <p class="resource-type">Einfacher gesagt</p>
+              <h3>Zwei Orte statt nur einer Webseite</h3>
+              <p>GitHub ist der Online-Ort deines Projekts. Auf deinem Computer liegt eine Arbeitskopie. Du arbeitest zuerst lokal und schickst die fertigen Änderungen danach wieder zurück zu GitHub.</p>
             </article>
             <article class="resource-card">
-              <p class="resource-type">Was du dafür brauchst</p>
-              <h3>GitHub-Konto, Repository und Git</h3>
-              <p>Du brauchst dein GitHub-Konto, Zugriff auf dein Projekt und das Programm <code>Git</code> auf deinem Computer.</p>
+              <p class="resource-type">Was Codex dabei tut</p>
+              <h3>Codex hilft beim Bearbeiten</h3>
+              <p>Codex kann Dateien öffnen, Texte oder Code ändern, neue Dateien ergänzen und danach mit dir prüfen, ob die Website noch funktioniert.</p>
             </article>
             <article class="resource-card">
-              <p class="resource-type">Die Grundidee</p>
-              <h3>Erst lokal arbeiten, dann online speichern</h3>
-              <p>Codex kann an deinen Dateien arbeiten. Mit Git speicherst du diese Änderungen danach als neue Version in deinem GitHub-Repository.</p>
+              <p class="resource-type">Wörter ohne Fachchinesisch</p>
+              <h3>Git, Commit und Push</h3>
+              <p><code>Git</code> merkt sich Änderungen. Ein <code>Commit</code> ist eine gespeicherte Zwischenversion. <code>Push</code> bedeutet: Diese Version wird zu GitHub hochgeladen.</p>
             </article>
           </div>
           <div class="guide-grid">
             <article class="guide-card">
-              <strong>1. Codex mit GitHub verbinden</strong>
-              <p>In Codex die Einstellungen öffnen, GitHub verbinden und den Zugriff erlauben.</p>
+              <strong>1. Verstehen, wo dein Projekt liegt</strong>
+              <p>Dein Repository ist der Online-Projektordner auf GitHub. Dort liegen alle Dateien, die zusammen deine Website bilden.</p>
             </article>
             <article class="guide-card">
-              <strong>2. Repository auswählen</strong>
-              <p>Danach das passende Projekt auswählen. Der Hauptzweig heisst oft <code>main</code>.</p>
+              <strong>2. Codex mit GitHub verbinden</strong>
+              <p>In Codex erlaubst du den Zugriff auf GitHub. Das ist wie eine Erlaubnis: Codex darf dein Projekt sehen und mit dir daran arbeiten.</p>
             </article>
             <article class="guide-card">
-              <strong>3. Git installieren</strong>
-              <p>Auf dem Mac meist mit <code>xcode-select --install</code>, auf Windows mit Git for Windows.</p>
+              <strong>3. Das richtige Repository wählen</strong>
+              <p>Du wählst genau das Projekt aus, an dem du arbeiten willst. Wichtig: Nicht irgendein Repository, sondern das Repository deiner Website.</p>
             </article>
             <article class="guide-card">
-              <strong>4. Projekt klonen</strong>
-              <p>Mit <code>git clone</code> holst du das Projekt auf deinen Computer und wechselst danach in den Projektordner.</p>
+              <strong>4. Eine Arbeitskopie holen</strong>
+              <p>Das Projekt wird auf deinen Computer geholt. Das nennt man manchmal <code>clone</code>. Gemeint ist einfach: Du bekommst eine lokale Kopie der Online-Dateien.</p>
             </article>
             <article class="guide-card">
-              <strong>5. Neue Version hochladen</strong>
-              <p>Nach der Arbeit mit Codex prüfst du die Änderungen und speicherst sie dann mit <code>git add .</code>, <code>git commit -m "Update"</code> und <code>git push</code> online.</p>
+              <strong>5. Lokal arbeiten und prüfen</strong>
+              <p>Codex ändert Dateien in dieser Kopie. Du prüfst danach: Sind Texte richtig? Funktionieren Bilder, Layout und Links noch?</p>
             </article>
             <article class="guide-card">
-              <strong>6. Wann dieser Weg sinnvoll ist</strong>
-              <p>Vor allem dann, wenn du öfter an grösseren Projekten arbeitest und nicht jedes Mal alles von Hand im Browser hochladen möchtest.</p>
+              <strong>6. Änderungen als Version speichern</strong>
+              <p>Wenn alles stimmt, werden die Änderungen als neue Version gemerkt. Das heisst <code>commit</code>. So bleibt nachvollziehbar, was geändert wurde.</p>
+            </article>
+            <article class="guide-card">
+              <strong>7. Die neue Version zu GitHub schicken</strong>
+              <p>Erst jetzt wird die neue Version online ins Repository übertragen. Das heisst <code>push</code>. Danach kann GitHub Pages die Website mit dem neuen Stand anzeigen.</p>
+            </article>
+            <article class="guide-card">
+              <strong>8. Wann dieser Weg sinnvoll ist</strong>
+              <p>Dieser Weg lohnt sich vor allem bei grösseren Projekten oder wenn du später oft weiterarbeitest. Für den Einstieg reicht der Browser-Weg aus dieser Lernstrecke völlig.</p>
             </article>
           </div>
           <div class="prompt-example">
             <strong>Kurz gesagt:</strong>
-            <p>Der Weg in dieser Lernstrecke war der einfache Browser-Weg. Der optionale Codex-GitHub-Weg ist der bequemere Weg für später: lokal arbeiten, Änderungen sammeln und dann als neue Version auf GitHub speichern.</p>
+            <p>Der Browser-Weg ist: Dateien direkt auf GitHub hochladen. Der Codex-GitHub-Weg ist: Projekt auf den Computer holen, dort mit Codex bearbeiten, die Änderungen als neue Version speichern und diese Version wieder zu GitHub hochladen.</p>
           </div>
         </section>
 
